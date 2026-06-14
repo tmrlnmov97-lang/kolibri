@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>О ресторане — Колибри</title>
+<style>
+  /* ============ FONTS (local) ============ */
+  @font-face{font-family:'Ouvality';src:url('assets/fonts/Ouvality.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Light.otf') format('opentype');font-weight:300;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Medium.otf') format('opentype');font-weight:400 500;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Bold.otf') format('opentype');font-weight:600 700;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-ExtraBold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+  /* ============ TOKENS ============ */
+  :root{
+    --red:#c6492e;
+    --red-accent:#c44031;
+    --ink:#352a29;
+    --ink-soft:#6b5d5b;
+    --cream:#fffcf0;
+    --band:#efe8d2;
+    --bg:#ffffff;
+
+    --display:'Ouvality', cursive;
+    --body:'Geometria', system-ui, sans-serif;
+
+    --maxw:1200px;
+    --pad:36px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+
+  body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  :focus-visible{outline:2px solid var(--red-accent);outline-offset:3px;border-radius:4px}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+
+  /* ============ HEADER ============ */
+  .header{background:var(--red);color:var(--cream);position:sticky;top:0;z-index:50}
+  .header__inner{max-width:var(--maxw);margin:0 auto;padding:16px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo{font-family:var(--display);font-size:34px;color:var(--cream);display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+  .logo img{height:40px;width:auto;display:block}
+  .logo svg{width:34px;height:20px;flex:0 0 auto}
+  .nav{display:flex;gap:30px;align-items:center}
+  .nav a{font-size:15px;font-weight:500;position:relative;padding:4px 0;color:var(--cream)}
+  .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;background:currentColor;transition:right .25s ease}
+  .nav a:hover::after,.nav a[aria-current="page"]::after{right:0}
+  .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:6px;padding:6px;color:var(--cream)}
+  .burger span{width:28px;height:2px;background:currentColor;border-radius:2px}
+
+  main{flex:1 0 auto}
+
+  /* ============ SECTIONS ============ */
+  .section{padding-block:clamp(40px,5.5vw,68px)}
+  .center-head{text-align:center;margin-bottom:clamp(22px,3vw,34px)}
+  .center-head .script{font-family:var(--display);color:var(--red-accent);font-size:clamp(40px,5vw,60px);line-height:1}
+  .center-head .sub{display:block;font-weight:300;color:var(--ink);font-size:clamp(18px,2.2vw,26px);margin-top:6px}
+  .prose{font-weight:500;font-size:17px;line-height:1.7;color:var(--ink);max-width:640px;margin:0 auto;text-align:center}
+
+  /* banner of 3 photos */
+  .banner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;overflow:hidden}
+  .banner img{width:100%;height:clamp(170px,18vw,250px);object-fit:cover}
+
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:8px}
+  .member figure{margin:0}
+  .member img{width:100%;height:300px;object-fit:cover;border-radius:24px}
+  .member .name{margin-top:14px;text-align:center;font-size:16px;font-weight:600;color:var(--ink)}
+  .member .role{text-align:center;font-size:13px;font-weight:500;color:var(--ink-soft);margin-top:2px}
+
+  /* ============ FOOTER ============ */
+  .footer{flex-shrink:0;position:relative;background:var(--band);color:var(--ink);margin-top:clamp(36px,5vw,60px)}
+  .footer__scallop{display:block;width:100%;height:40px;color:var(--band);margin-top:-1px}
+  .footer__scallop svg{display:block;width:100%;height:100%}
+  .footer__inner{max-width:var(--maxw);margin:0 auto;padding:10px var(--pad) 44px;display:flex;flex-wrap:wrap;gap:24px 40px;align-items:flex-start;justify-content:space-between}
+  .footer .legal a{display:block;font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:2px;margin-bottom:8px}
+  .footer .fnav{display:flex;flex-wrap:wrap;gap:14px 28px}
+  .footer .fnav a{font-size:15px;font-weight:500}
+  .footer .fnav a:hover{color:var(--red-accent)}
+
+  /* ============ DRAWER ============ */
+  .drawer{position:fixed;inset:0 0 0 auto;width:min(82%,360px);background:var(--red);color:var(--cream);z-index:80;transform:translateX(100%);transition:transform .3s ease;padding:88px 28px 28px;display:flex;flex-direction:column;gap:6px;box-shadow:-24px 0 60px -20px rgba(0,0,0,.5)}
+  .drawer[data-open="true"]{transform:translateX(0)}
+  .drawer a{font-size:18px;padding:12px 0;font-weight:500}
+  .drawer__close{position:absolute;top:24px;right:24px;background:none;border:0;color:var(--cream);font-size:30px;line-height:1;cursor:pointer}
+  .overlay{position:fixed;inset:0;background:rgba(53,42,41,.5);z-index:75;opacity:0;visibility:hidden;transition:opacity .3s ease}
+  .overlay[data-open="true"]{opacity:1;visibility:visible}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:860px){
+    .nav{display:none}
+    .burger{display:inline-flex}
+    .team{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:480px){
+    .team{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header__inner">
+    <a class="logo" href="Home.html" aria-label="Колибри — на главную">
+      <img src="assets/logo.png" alt="Колибри">
+    </a>
+    <nav class="nav" aria-label="Главное меню">
+      <a href="Menu.html">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+      <a href="About.html" aria-current="page">о ресторане</a>
+      <a href="Contacts.html">контакты</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="drawer">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ===== ИСТОРИЯ И ИДЕЯ ===== -->
+  <section class="section wrap">
+    <div class="center-head">
+      <span class="script">История</span>
+      <span class="sub">и идея места</span>
+    </div>
+    <p class="prose">
+      «Колибри» родился из простого желания — сделать место, куда хочется ехать не ради
+      галочки в списке, а ради атмосферы. Здесь важно всё: вид из окна, свет, звук,
+      запах огня, улыбки команды. Мы любим, когда гости задерживаются дольше, чем
+      планировали, и не спешат уезжать.
+    </p>
+  </section>
+
+  <!-- ===== ПРИРОДА И ЛОКАЦИЯ ===== -->
+  <section>
+    <div class="wrap">
+      <div class="center-head">
+        <span class="script">Природа</span>
+        <span class="sub">и локация</span>
+      </div>
+    </div>
+    <div class="banner">
+      <img src="assets/bnk-1.jpg" alt="Ресторан у воды — 1">
+      <img src="assets/bnk-2.jpg" alt="Ресторан у воды — 2">
+      <img src="assets/bnk-3.jpg" alt="Ресторан у воды — 3">
+    </div>
+  </section>
+
+  <!-- ===== НАША КОМАНДА ===== -->
+  <section class="section wrap">
+    <div class="center-head">
+      <span class="script">Наша</span>
+      <span class="sub">команда</span>
+    </div>
+    <div class="team">
+      <div class="member"><figure><img src="assets/avt1.jpg" alt="Михаил повар"></figure><div class="name">Михаил повар</div></div>
+      <div class="member"><figure><img src="assets/avt2.jpg" alt="Михаил повар"></figure><div class="name">Михаил повар</div></div>
+      <div class="member"><figure><img src="assets/avt1.jpg" alt="Михаил повар"></figure><div class="name">Михаил повар</div></div>
+      <div class="member"><figure><img src="assets/avt2.jpg" alt="Михаил повар"></figure><div class="name">Михаил повар</div></div>
+    </div>
+  </section>
+
+  <!-- ===== НАШИ ЦЕННОСТИ ===== -->
+  <section class="section wrap">
+    <div class="center-head">
+      <span class="script">Наши</span>
+      <span class="sub">ценности</span>
+    </div>
+    <p class="prose">
+      Честные продукты и уважение к еде, гостеприимство без формальностей и внимание
+      к деталям. Мы готовим на открытом огне, привозим свежую рыбу и работаем так,
+      чтобы каждый вечер в «Колибри» хотелось повторить — будь то семейный ужин,
+      встреча с друзьями или большой праздник.
+    </p>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__scallop" aria-hidden="true">
+    <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="currentColor">
+      <path d="M0 40V10C100 10 100 0 200 0s100 10 200 10 100-10 200-10 100 10 200 10 100-10 200-10 100 10 200 10v30z"/>
+    </svg>
+  </div>
+  <div class="footer__inner">
+    <div class="legal">
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Юридическая информация</a>
+    </div>
+    <nav class="fnav" aria-label="Нижнее меню">
+      <a href="Menu.html">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+      <a href="About.html" aria-current="page">о ресторане</a>
+      <a href="Contacts.html">контакты</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ===== DRAWER ===== -->
+<div class="overlay" id="overlay"></div>
+<nav class="drawer" id="drawer" aria-label="Меню">
+  <button class="drawer__close" id="drawerClose" aria-label="Закрыть">&times;</button>
+  <a href="Menu.html">меню</a>
+  <a href="Banquets.html">банкеты и свадьбы</a>
+  <a href="Delivery.html">доставка</a>
+  <a href="About.html" aria-current="page">о ресторане</a>
+  <a href="Contacts.html">контакты</a>
+</nav>
+
+<script>
+  const burger=document.getElementById('burger');
+  const drawer=document.getElementById('drawer');
+  const overlay=document.getElementById('overlay');
+  const dClose=document.getElementById('drawerClose');
+  function setNav(open){drawer.dataset.open=open;overlay.dataset.open=open;burger.setAttribute('aria-expanded',open);document.body.style.overflow=open?'hidden':''}
+  burger.addEventListener('click',()=>setNav(true));
+  overlay.addEventListener('click',()=>setNav(false));
+  dClose.addEventListener('click',()=>setNav(false));
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setNav(false)));
+  addEventListener('keydown',e=>{if(e.key==='Escape')setNav(false)});
+</script>
+</body>
+</html>

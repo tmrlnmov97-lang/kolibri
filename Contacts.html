@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — Колибри</title>
+<style>
+  /* ============ FONTS (local) ============ */
+  @font-face{font-family:'Ouvality';src:url('assets/fonts/Ouvality.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Medium.otf') format('opentype');font-weight:400 500;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Bold.otf') format('opentype');font-weight:600 700;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-ExtraBold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+  /* ============ TOKENS ============ */
+  :root{
+    --red:#c6492e;
+    --red-accent:#c44031;
+    --ink:#352a29;
+    --ink-soft:#6b5d5b;
+    --cream:#fffcf0;
+    --band:#efe8d2;
+    --bg:#ffffff;
+    --tg:#229ed9;
+    --wa:#25d366;
+
+    --display:'Ouvality', cursive;
+    --body:'Geometria', system-ui, sans-serif;
+
+    --maxw:1200px;
+    --pad:36px;
+    --radius:40px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+
+  body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  :focus-visible{outline:2px solid var(--red-accent);outline-offset:3px;border-radius:4px}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+
+  /* ============ HEADER ============ */
+  .header{background:var(--red);color:var(--cream);position:sticky;top:0;z-index:50}
+  .header__inner{max-width:var(--maxw);margin:0 auto;padding:16px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo{font-family:var(--display);font-size:34px;color:var(--cream);display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+  .logo img{height:40px;width:auto;display:block}
+  .logo svg{width:34px;height:20px;flex:0 0 auto}
+  .nav{display:flex;gap:30px;align-items:center}
+  .nav a{font-size:15px;font-weight:500;position:relative;padding:4px 0;color:var(--cream)}
+  .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;background:currentColor;transition:right .25s ease}
+  .nav a:hover::after,.nav a[aria-current="page"]::after{right:0}
+  .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:6px;padding:6px;color:var(--cream)}
+  .burger span{width:28px;height:2px;background:currentColor;border-radius:2px}
+
+  main{flex:1 0 auto}
+
+  /* ============ HEADINGS ============ */
+  .center-head{text-align:center}
+  .center-head .script{font-family:var(--display);color:var(--red-accent);font-size:clamp(40px,5vw,60px);line-height:1}
+  .center-head .sub{display:block;font-weight:500;color:var(--ink);font-size:clamp(18px,2.2vw,26px);margin-top:4px}
+
+  /* ============ CONTACTS ============ */
+  .contacts{padding-top:clamp(40px,6vw,64px)}
+  .contact-card{text-align:center;margin-top:clamp(20px,3vw,30px)}
+  .contact-card .phone{font-size:clamp(19px,2.2vw,22px);font-weight:600;display:inline-block}
+  .contact-card .address{margin-top:10px;font-weight:500;font-size:16px;color:var(--ink);max-width:560px;margin-inline:auto}
+
+  /* ============ MAP ============ */
+  .map-wrap{position:relative;margin:clamp(28px,4vw,42px) auto 0;max-width:980px;border-radius:var(--radius);overflow:hidden;box-shadow:0 18px 50px -28px rgba(53,42,41,.45);aspect-ratio:980/360}
+  .map-wrap iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.95)}
+  .map-badge{position:absolute;left:clamp(18px,4vw,44px);bottom:clamp(16px,4vw,34px);background:var(--red-accent);color:var(--cream);border-radius:999px;padding:14px 28px;text-align:center;box-shadow:0 10px 24px -8px rgba(196,64,49,.75)}
+  .map-badge .name{font-family:var(--display);font-size:28px;line-height:.9}
+  .map-badge .tag{font-size:9px;letter-spacing:.2em;text-transform:uppercase;opacity:.92;margin-top:4px}
+  @media (max-width:560px){
+    .map-wrap{aspect-ratio:4/5}
+    .map-badge{left:50%;transform:translateX(-50%);bottom:16px}
+  }
+
+  /* ============ MESSENGER ============ */
+  .messenger{padding-block:clamp(48px,7vw,80px);text-align:center}
+  .messenger .center-head{margin-bottom:clamp(22px,3vw,30px)}
+  .msg-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .msg-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;border-radius:999px;font-weight:600;font-size:15px;color:#fff;transition:transform .18s ease,box-shadow .18s ease}
+  .msg-btn svg{width:20px;height:20px}
+  .msg-btn:hover{transform:translateY(-2px)}
+  .msg-btn--tg{background:var(--tg);box-shadow:0 10px 24px -12px var(--tg)}
+  .msg-btn--wa{background:var(--wa);box-shadow:0 10px 24px -12px var(--wa)}
+
+  /* ============ FOOTER ============ */
+  .footer{flex-shrink:0;position:relative;background:var(--band);color:var(--ink);margin-top:clamp(20px,3vw,40px)}
+  .footer__scallop{display:block;width:100%;height:40px;color:var(--band);margin-top:-1px}
+  .footer__scallop svg{display:block;width:100%;height:100%}
+  .footer__inner{max-width:var(--maxw);margin:0 auto;padding:10px var(--pad) 44px;display:flex;flex-wrap:wrap;gap:24px 40px;align-items:flex-start;justify-content:space-between}
+  .footer .legal a{display:block;font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:2px;margin-bottom:8px}
+  .footer .fnav{display:flex;flex-wrap:wrap;gap:14px 28px}
+  .footer .fnav a{font-size:15px;font-weight:500}
+  .footer .fnav a:hover{color:var(--red-accent)}
+
+  /* ============ DRAWER ============ */
+  .drawer{position:fixed;inset:0 0 0 auto;width:min(82%,360px);background:var(--red);color:var(--cream);z-index:80;transform:translateX(100%);transition:transform .3s ease;padding:88px 28px 28px;display:flex;flex-direction:column;gap:6px;box-shadow:-24px 0 60px -20px rgba(0,0,0,.5)}
+  .drawer[data-open="true"]{transform:translateX(0)}
+  .drawer a{font-size:18px;padding:12px 0;font-weight:500}
+  .drawer__close{position:absolute;top:24px;right:24px;background:none;border:0;color:var(--cream);font-size:30px;line-height:1;cursor:pointer}
+  .overlay{position:fixed;inset:0;background:rgba(53,42,41,.5);z-index:75;opacity:0;visibility:hidden;transition:opacity .3s ease}
+  .overlay[data-open="true"]{opacity:1;visibility:visible}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:860px){
+    .nav{display:none}
+    .burger{display:inline-flex}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header__inner">
+    <a class="logo" href="Home.html" aria-label="Колибри — на главную">
+      <img src="assets/logo.png" alt="Колибри">
+    </a>
+    <nav class="nav" aria-label="Главное меню">
+      <a href="Menu.html">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+      <a href="About.html">о ресторане</a>
+      <a href="Contacts.html" aria-current="page">контакты</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="drawer">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ===== КАК ДОБРАТЬСЯ ===== -->
+  <section class="contacts wrap" id="contacts">
+    <div class="center-head">
+      <span class="script">Как до нас</span>
+      <span class="sub">добраться</span>
+    </div>
+    <div class="contact-card">
+      <a class="phone" href="tel:+79332728888">+7 933 272-88-88</a>
+      <p class="address">Московская область, г.о. Люберцы, село Верхнее Мячково,<br>КП Белый берег, Подгорная улица, 9К</p>
+    </div>
+
+    <div class="map-wrap">
+      <iframe
+        title="Карта проезда к ресторану Колибри"
+        loading="lazy"
+        src="https://yandex.ru/map-widget/v1/?text=Московская%20область%20Люберцы%20Верхнее%20Мячково%20Подгорная%209&z=14"></iframe>
+      <div class="map-badge">
+        <div class="name">колибри</div>
+        <div class="tag">ресторан</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== МЕССЕНДЖЕРЫ ===== -->
+  <section class="messenger wrap">
+    <div class="center-head">
+      <span class="script">Задать вопрос</span>
+      <span class="sub">в мессенджере</span>
+    </div>
+    <div class="msg-row">
+      <a class="msg-btn msg-btn--tg" href="https://t.me/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.6 19c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13 1.8 11.5c-1-.3-1-1 .2-1.5l18.6-7.2c.8-.3 1.5.2 1.3 1.5z"/></svg>
+        Telegram
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__scallop" aria-hidden="true">
+    <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="currentColor">
+      <path d="M0 40V10C100 10 100 0 200 0s100 10 200 10 100-10 200-10 100 10 200 10 100-10 200-10 100 10 200 10v30z"/>
+    </svg>
+  </div>
+  <div class="footer__inner">
+    <div class="legal">
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Юридическая информация</a>
+    </div>
+    <nav class="fnav" aria-label="Нижнее меню">
+      <a href="Menu.html">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+      <a href="About.html">о ресторане</a>
+      <a href="Contacts.html" aria-current="page">контакты</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ===== DRAWER ===== -->
+<div class="overlay" id="overlay"></div>
+<nav class="drawer" id="drawer" aria-label="Меню">
+  <button class="drawer__close" id="drawerClose" aria-label="Закрыть">&times;</button>
+  <a href="Menu.html">меню</a>
+  <a href="Banquets.html">банкеты и свадьбы</a>
+  <a href="Delivery.html">доставка</a>
+  <a href="About.html">о ресторане</a>
+  <a href="Contacts.html" aria-current="page">контакты</a>
+</nav>
+
+<script>
+  const burger=document.getElementById('burger');
+  const drawer=document.getElementById('drawer');
+  const overlay=document.getElementById('overlay');
+  const dClose=document.getElementById('drawerClose');
+  function setNav(open){drawer.dataset.open=open;overlay.dataset.open=open;burger.setAttribute('aria-expanded',open);document.body.style.overflow=open?'hidden':''}
+  burger.addEventListener('click',()=>setNav(true));
+  overlay.addEventListener('click',()=>setNav(false));
+  dClose.addEventListener('click',()=>setNav(false));
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setNav(false)));
+  addEventListener('keydown',e=>{if(e.key==='Escape')setNav(false)});
+</script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Колибри — ресторан у воды</title>
+<style>
+  /* ============ FONTS (local) ============ */
+  @font-face{font-family:'Ouvality';src:url('assets/fonts/Ouvality.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Light.otf') format('opentype');font-weight:300;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Medium.otf') format('opentype');font-weight:400 500;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Bold.otf') format('opentype');font-weight:600 700;font-style:normal;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-ExtraBold.otf') format('opentype');font-weight:800;font-style:normal;font-display:swap}
+  /* ============ TOKENS ============ */
+  :root{
+    --red:#c6492e;
+    --red-accent:#c44031;
+    --ink:#352a29;
+    --ink-soft:#6b5d5b;
+    --cream:#fffcf0;
+    --band:#efe8d2;
+    --bg:#ffffff;
+
+    --display:'Ouvality', cursive;          /* real font */
+    --body:'Geometria', system-ui, sans-serif; /* real font */
+
+    --maxw:1200px;
+    --pad:36px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+
+  body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  :focus-visible{outline:2px solid var(--red-accent);outline-offset:3px;border-radius:4px}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--pad)}
+  .script{font-family:var(--display);color:var(--red-accent);line-height:1;font-weight:400}
+
+  /* ============ HEADER ============ */
+  .header{position:absolute;top:0;left:0;right:0;z-index:20;color:var(--cream)}
+  .header__inner{max-width:var(--maxw);margin:0 auto;padding:22px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo{font-family:var(--display);font-size:34px;color:var(--cream);display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+  .logo img{height:40px;width:auto;display:block}
+  .logo svg{width:34px;height:20px;flex:0 0 auto}
+  .nav{display:flex;gap:28px;align-items:center}
+  .nav a{font-size:15px;font-weight:500;position:relative;padding:4px 0;color:var(--cream)}
+  .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;background:currentColor;transition:right .25s ease}
+  .nav a:hover::after,.nav a[aria-current="page"]::after{right:0}
+  .burger{display:none;background:none;border:0;cursor:pointer;flex-direction:column;gap:6px;padding:6px;color:var(--cream)}
+  .burger span{width:28px;height:2px;background:currentColor;border-radius:2px}
+
+  /* ============ BUTTONS ============ */
+  .btn{display:inline-flex;align-items:center;justify-content:center;font-weight:500;font-size:16px;color:var(--cream);background:var(--red-accent);padding:13px 30px;border-radius:63px;border:0;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 12px 26px -12px rgba(196,64,49,.7)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px -12px rgba(196,64,49,.85)}
+  .btn--ghost{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 1.5px rgba(255,252,240,.8)}
+  .btn--ghost:hover{background:rgba(255,252,240,.12);box-shadow:inset 0 0 0 1.5px var(--cream)}
+  .btn--outline{background:transparent;color:var(--red-accent);box-shadow:inset 0 0 0 1.5px var(--red-accent)}
+  .btn--outline:hover{background:rgba(196,64,49,.08);box-shadow:inset 0 0 0 1.5px var(--red-accent)}
+
+  /* ============ HERO ============ */
+  .hero{position:relative;color:var(--cream)}
+  .hero__media{position:relative}
+  .hero__media img{display:block;width:100%;height:auto}
+  .hero__media::after{content:"";position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;background:linear-gradient(180deg,rgba(23,0,0,.30) 0%,rgba(23,0,0,.06) 45%,rgba(23,0,0,0) 62%)}
+  .hero__content{position:absolute;left:0;right:0;top:0;bottom:13%;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px var(--pad)}
+  .hero__title{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,60px);line-height:1.05;color:var(--cream);max-width:1000px;text-shadow:0 3px 22px rgba(0,0,0,.5)}
+  .hero__lead{font-weight:500;font-size:clamp(15px,1.6vw,18px);line-height:1.5;max-width:660px;margin:22px auto 0;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+  .hero__cta{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .hero__scallop{display:none}
+
+  /* ============ SECTION HELPERS ============ */
+  .section{padding-block:clamp(46px,6vw,76px)}
+  .split{display:grid;grid-template-columns:minmax(200px,1fr) 1.5fr;gap:40px;align-items:start}
+  .h-stack .script{font-size:clamp(44px,5.6vw,72px);line-height:.95}
+  .h-stack .line{display:block;font-weight:300;font-size:clamp(26px,3.2vw,40px);color:var(--ink);line-height:1.1;margin-top:8px;padding-left:.7em}
+  .h-stack--wide .script{white-space:nowrap;font-size:clamp(30px,3.9vw,50px)}
+  .h-stack--wide .line{text-align:right;padding-left:0}
+  .lead-col{font-weight:500;font-size:16px;line-height:1.6;color:var(--ink);align-self:center}
+  .center-head{text-align:center;margin-bottom:clamp(28px,4vw,44px)}
+  .center-head .script{font-size:clamp(36px,4.6vw,56px)}
+  .center-head .line{display:block;font-weight:300;font-size:clamp(22px,2.8vw,34px);color:var(--ink);margin-top:4px}
+
+  /* three reasons / venue cards */
+  .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:#faf7f3;border-radius:26px;padding:26px 28px}
+  .card h3{font-size:18px;font-weight:600;margin-bottom:10px}
+  .card p{font-weight:500;font-size:15px;line-height:1.55;color:var(--ink)}
+  .note{text-align:center;font-weight:500;font-size:16px;line-height:1.6;color:var(--ink);max-width:860px;margin:clamp(24px,3vw,34px) auto 0}
+
+  /* fire banner */
+  .fire__banner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;overflow:hidden}
+  .fire__banner img{width:100%;height:clamp(180px,20vw,280px);object-fit:cover}
+  .fire__text{max-width:var(--maxw);margin:0 auto;padding:clamp(30px,4vw,46px) var(--pad) 0;text-align:center}
+  .fire__text .head{margin-bottom:18px}
+  .fire__text p{font-weight:500;font-size:16px;line-height:1.7;color:var(--ink);max-width:980px;margin:0 auto}
+
+  /* bar + 2 photos */
+  .photos-2{display:flex;gap:24px;flex-wrap:wrap;margin-top:clamp(24px,3vw,34px)}
+  .photos-2 img{width:360px;max-width:calc(50% - 12px);height:300px;object-fit:cover;border-radius:6px 44px 44px 44px}
+
+  /* weddings: heading + buttons + cards */
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+  .cta-stack{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:clamp(30px,4vw,46px)}
+  .cta-stack .btn{min-width:360px}
+  @media (max-width:480px){.cta-stack .btn{min-width:0;width:100%}}
+
+  /* book + delivery */
+  .book__cols{display:grid;grid-template-columns:1fr 1px 1fr;gap:clamp(30px,5vw,64px);align-items:start;max-width:1000px;margin:0 auto}
+  .book__divider{background:rgba(53,42,41,.2);align-self:stretch;min-height:200px}
+  .book__col{text-align:center}
+  .bk-head .script{display:block;font-family:var(--display);color:var(--red-accent);font-size:clamp(36px,4.4vw,56px);line-height:1}
+  .bk-head .bk-sub{display:block;font-weight:300;font-size:clamp(22px,2.6vw,32px);color:var(--ink);margin-top:4px}
+  .book__col p{font-weight:500;font-size:15px;line-height:1.6;color:var(--ink);max-width:360px;margin:clamp(16px,2.2vw,24px) auto 0}
+  .book__form{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:clamp(34px,5vw,56px)}
+  .book__form input{flex:1 1 260px;max-width:430px;border:1.5px solid var(--red-accent);background:transparent;border-radius:999px;padding:16px 24px;font:inherit;font-size:16px;color:var(--red-accent);text-align:center}
+  .book__form input::placeholder{color:var(--red-accent);opacity:1}
+  .book__form input:focus{outline:none;box-shadow:0 0 0 1.5px var(--red-accent)}
+  .book__consent{font-size:13px;line-height:1.5;color:var(--ink-soft);text-align:center;max-width:560px;margin:clamp(16px,2.2vw,22px) auto 0}
+  .book__consent a{text-decoration:underline}
+  .book__submit{text-align:center;margin-top:clamp(16px,2.2vw,22px)}
+  .book__submit .btn{min-width:clamp(280px,40vw,470px)}
+
+  /* life + gallery */
+  .life-intro{padding-bottom:clamp(8px,2vw,18px)}
+  .life-lead{font-weight:500;font-size:16px;line-height:1.6;color:var(--ink);max-width:760px;margin:clamp(6px,1.2vw,12px) auto 0;text-align:center}
+  /* cream band with figured top (border.png) */
+  .gallery-band{background:url('assets/border.png') no-repeat center top;background-size:100% 100%;padding-top:clamp(64px,7vw,104px);padding-bottom:clamp(36px,4.5vw,56px)}
+  /* label (left) + photo strip (right) + button under strip */
+  .gallery-grid{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:30px;row-gap:clamp(22px,3vw,32px);align-items:center}
+  .sub-head{grid-column:1;grid-row:1}
+  .sub-head .script{display:block;font-family:var(--display);color:var(--red-accent);font-size:clamp(38px,4.4vw,58px);line-height:.95}
+  .sub-head .line{display:block;font-weight:300;font-size:clamp(24px,2.8vw,34px);color:var(--ink);line-height:1.1;margin-top:4px;padding-left:.5em}
+  .gallery{grid-column:2;grid-row:1;display:flex;gap:18px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory}
+  .gallery::-webkit-scrollbar{height:8px}
+  .gallery::-webkit-scrollbar-thumb{background:rgba(196,64,49,.5);border-radius:8px}
+  .gallery img{flex:0 0 auto;width:200px;height:270px;object-fit:cover;border-radius:22px;scroll-snap-align:start;cursor:zoom-in;transition:transform .2s ease}
+  .gallery img:hover{transform:translateY(-3px)}
+  /* lightbox */
+  .lb{position:fixed;inset:0;z-index:100;background:rgba(28,18,16,.92);display:none;place-items:center;padding:24px;cursor:zoom-out}
+  .lb[data-open="true"]{display:grid}
+  .lb img{max-width:94vw;max-height:90vh;border-radius:12px;box-shadow:0 30px 80px -20px rgba(0,0,0,.7)}
+  .lb__close{position:fixed;top:18px;right:24px;background:none;border:0;color:var(--cream);font-size:38px;line-height:1;cursor:pointer}
+  .gallery-cta{grid-column:2;grid-row:2;text-align:left}
+
+  /* reviews */
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .review{padding:4px}
+  .review p{font-weight:500;font-size:15px;line-height:1.6;color:var(--ink)}
+  .review .who{margin-top:18px;font-weight:600;font-size:15px;color:var(--ink)}
+  .review .stars{color:var(--red-accent);font-size:15px;letter-spacing:2px;margin-bottom:12px}
+
+  /* contacts + feature photo */
+  .contacts{text-align:center}
+  .contacts .phone{display:inline-block;margin-top:20px;font-size:22px;font-weight:600}
+  .contacts .address{margin-top:12px;font-weight:500;font-size:16px;color:var(--ink);max-width:580px;margin-inline:auto}
+  .feature{max-width:var(--maxw);margin:clamp(30px,4vw,44px) auto 0;padding-inline:var(--pad)}
+  .feature__inner{position:relative;border-radius:40px;overflow:hidden}
+  .feature__inner img{width:100%;height:auto;display:block}
+  .feature__inner--map{aspect-ratio:1128/440;box-shadow:0 18px 50px -28px rgba(53,42,41,.45)}
+  .feature__inner--map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;filter:saturate(.95)}
+  @media (max-width:560px){.feature__inner--map{aspect-ratio:4/5}}
+  .badge{position:absolute;left:9%;bottom:14%;background:var(--red-accent);color:var(--cream);border-radius:999px;padding:14px 30px;text-align:center;box-shadow:0 10px 26px -10px rgba(196,64,49,.8)}
+  .badge .name{font-family:var(--display);font-size:30px;line-height:.9}
+  .badge .tag{font-size:9px;letter-spacing:.22em;text-transform:uppercase;opacity:.92;margin-top:4px}
+
+  /* ============ FOOTER ============ */
+  .footer{position:relative;background:var(--band);color:var(--ink);margin-top:clamp(40px,5vw,64px)}
+  .footer__scallop{display:block;width:100%;height:40px;color:var(--band);margin-top:-1px}
+  .footer__scallop svg{display:block;width:100%;height:100%}
+  .footer__inner{max-width:var(--maxw);margin:0 auto;padding:10px var(--pad) 44px;display:flex;flex-wrap:wrap;gap:24px 40px;align-items:flex-start;justify-content:space-between}
+  .footer .legal a{display:block;font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:2px;margin-bottom:8px}
+  .footer .fnav{display:flex;flex-wrap:wrap;gap:14px 28px}
+  .footer .fnav a{font-size:15px;font-weight:500}
+  .footer .fnav a:hover{color:var(--red-accent)}
+
+  /* ============ DRAWER ============ */
+  .drawer{position:fixed;inset:0 0 0 auto;width:min(82%,360px);background:var(--red);color:var(--cream);z-index:80;transform:translateX(100%);transition:transform .3s ease;padding:88px 28px 28px;display:flex;flex-direction:column;gap:6px;box-shadow:-24px 0 60px -20px rgba(0,0,0,.5)}
+  .drawer[data-open="true"]{transform:translateX(0)}
+  .drawer a{font-size:18px;padding:12px 0;font-weight:500}
+  .drawer__close{position:absolute;top:24px;right:24px;background:none;border:0;color:var(--cream);font-size:30px;line-height:1;cursor:pointer}
+  .overlay{position:fixed;inset:0;background:rgba(53,42,41,.5);z-index:75;opacity:0;visibility:hidden;transition:opacity .3s ease}
+  .overlay[data-open="true"]{opacity:1;visibility:visible}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:900px){
+    .nav{display:none}
+    .burger{display:inline-flex}
+    /* mobile hero: photo covers content area, text in normal flow, white wave at bottom */
+    .hero__media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 26%}
+    .hero__content{position:relative;z-index:2;padding:84px 24px 76px}
+    .hero__title{font-size:clamp(26px,7.4vw,38px)}
+    .hero__lead{font-size:14.5px;margin-top:18px}
+    .hero__cta{flex-direction:column;align-items:stretch;gap:12px;margin-top:24px}
+    .hero__cta .btn{width:100%;justify-content:center}
+    .hero__scallop{display:block;position:absolute;left:0;right:0;bottom:-1px;z-index:3;width:100%;height:42px;color:var(--bg)}
+    .hero__scallop svg{display:block;width:100%;height:100%}
+    .split{grid-template-columns:1fr;gap:18px}
+    .cards-3,.reviews{grid-template-columns:1fr}
+    .photos-2 img{width:calc(50% - 12px);max-width:none;height:240px}
+    .gallery-grid{grid-template-columns:1fr;row-gap:18px}
+    .gallery-grid .sub-head,.gallery-grid .gallery,.gallery-grid .gallery-cta{grid-column:1}
+    .gallery-grid .gallery{grid-row:auto}
+    .gallery-grid .gallery-cta{grid-row:auto;text-align:center}
+    .book__cols{grid-template-columns:1fr;gap:30px}
+    .book__divider{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <header class="header">
+    <div class="header__inner">
+      <a class="logo" href="Home.html" aria-label="Колибри — на главную">
+        <img src="assets/logo.png" alt="Колибри">
+      </a>
+      <nav class="nav" aria-label="Главное меню">
+        <a href="Menu.html">меню</a>
+        <a href="Banquets.html">банкеты и свадьбы</a>
+        <a href="Delivery.html">доставка</a>
+        <a href="About.html">о ресторане</a>
+        <a href="Contacts.html">контакты</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="drawer">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="hero__media">
+    <img src="assets/hero.jpg?v=3" alt="Ресторан Колибри у воды">
+    <div class="hero__content">
+      <h1 class="hero__title">Колибри — ресторан у воды, куда хочется вернуться</h1>
+      <p class="hero__lead">
+        Чистый воздух, открытый гриль и тандыр, живая рыба в аквариуме, коктейли,
+        душевные вечера и праздники под открытым небом — всё в одном месте
+      </p>
+      <div class="hero__cta">
+        <a class="btn" href="#contacts">забронировать стол</a>
+        <a class="btn btn--ghost" href="Banquets.html">провести банкет или свадьбу</a>
+      </div>
+    </div>
+    <div class="hero__scallop" aria-hidden="true">
+      <svg viewBox="0 0 1200 70" preserveAspectRatio="none" fill="currentColor"><path d="M0 70 L0 34 L150 34 C168 34 172 15 194 15 C214 15 217 43 237 43 C257 43 260 15 281 15 C303 15 313 45 340 45 L1200 45 L1200 70 Z"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== НЕ «ЗАВЕДЕНИЕ ПО ПУТИ» ===== -->
+<section class="section wrap">
+  <div class="split">
+    <h2 class="h-stack"><span class="script">Колибри</span><span class="line">— это не «заведение по пути»</span></h2>
+    <p class="lead-col">
+      Это ресторан, ради которого садятся в машину, чтобы сменить воздух, картинку
+      и настроение: поужинать с семьёй, встретиться с друзьями, провести банкет
+      или свадьбу у воды.
+    </p>
+  </div>
+</section>
+
+<!-- ===== ТРИ ПРИЧИНЫ ===== -->
+<section class="section wrap" id="unique">
+  <div class="center-head">
+    <span class="script">Три причины</span>
+    <span class="line">доехать до Колибри</span>
+  </div>
+  <div class="cards-3">
+    <article class="card">
+      <h3>Природа и воздух</h3>
+      <p>Ресторан у воды, зелень вокруг, открытая терраса и ротонда. Здесь легко выдохнуть после города и почувствовать, как меняется настроение.</p>
+    </article>
+    <article class="card">
+      <h3>Кухня с огнём</h3>
+      <p>Открытый гриль и тандыр, живая рыба, кавказская и европейская кухня. Вкус, который сложно повторить дома.</p>
+    </article>
+    <article class="card">
+      <h3>Праздники у воды</h3>
+      <p>Банкеты и свадьбы в крытом зале и на просторной террасе, выездные регистрации в ротонде, дни рождения и корпоративы с красивой картинкой.</p>
+    </article>
+  </div>
+  <p class="note">Всё удобно! Онлайн-бронирование столов, собственная доставка, продуманное меню — вы заранее понимаете, куда едете и что ждёт гостей.</p>
+</section>
+
+<!-- ===== КОГДА ВКУС РЕШАЕТ — ОГОНЬ ===== -->
+<section class="section" style="padding-bottom:0">
+  <div class="fire__banner">
+    <img src="assets/bnk-1.jpg" alt="Блюда с открытого гриля">
+    <img src="assets/bnk-2.jpg" alt="Тандыр и мясо">
+    <img src="assets/bnk-3.jpg" alt="Свежая рыба">
+  </div>
+  <div class="fire__text">
+    <h2 class="h-stack head"><span class="script">Когда вкус решает</span><span class="line">— огонь</span></h2>
+    <p>
+      В «Колибри» вкус начинается с огня. На открытом гриле и в тандыре мы готовим мясо,
+      рыбу и овощи — блюда с дымком и хрустящей корочкой, ради которых хочется вернуться.
+      Живая рыба в аквариуме превращает заказ в маленький ритуал: вы видите, что выбираете,
+      и получаете идеально свежий результат. Кавказская и европейская кухня делают меню
+      понятным и разнообразным — каждый за столом найдёт своё любимое блюдо.
+    </p>
+  </div>
+</section>
+
+<!-- ===== БАР, КОТОРЫЙ УСИЛИВАЕТ ВЕЧЕР ===== -->
+<section class="section wrap">
+  <div class="split">
+    <h2 class="h-stack"><span class="script">Бар, который</span><span class="line">усиливает вечер</span></h2>
+    <p class="lead-col">
+      Коктейли в «Колибри» — не просто дополнение к меню, а отдельная причина приехать.
+      Классика и авторские сочетания, винная карта и аккуратный выбор крепких напитков —
+      всё, чтобы вечер звучал глубже и дольше. Мы подбираем напитки под блюдо, настроение
+      и повод: от семейного ужина до шумного праздника.
+    </p>
+  </div>
+  <div class="photos-2">
+    <img src="assets/avt2.jpg" alt="Авторский коктейль">
+    <img src="assets/avt1.jpg" alt="Бар ресторана Колибри">
+  </div>
+</section>
+
+<!-- ===== ОТ ЮБИЛЕЯ ДО СВАДЬБЫ ===== -->
+<section class="section wrap">
+  <div class="split">
+    <div class="h-stack h-stack--wide">
+      <span class="script">От семейного юбилея</span>
+      <span class="line">до свадьбы<br>у воды</span>
+    </div>
+    <p class="lead-col">
+      «Колибри» — место, где удобно и красиво проводить любые события: дни рождения,
+      юбилеи, корпоративы, небольшие свадьбы и выездные регистрации. Вы выбираете формат —
+      мы собираем праздник.
+    </p>
+  </div>
+  <div class="cards-3" style="margin-top:clamp(28px,4vw,42px)">
+    <article class="card">
+      <h3>Ротонда и регистрации</h3>
+      <p>Ротонда у воды для красивых церемоний. Место, где выездная регистрация выглядит как сцена из кино и остаётся в памяти надолго.</p>
+    </article>
+    <article class="card">
+      <h3>Крытый зал</h3>
+      <p>Уютный зал для камерных банкетов. Идеален, когда важна атмосфера «своего места» без лишнего шума.</p>
+    </article>
+    <article class="card">
+      <h3>Открытая терраса</h3>
+      <p>Большая терраса с видом на воду. Летние свадьбы, тёплые вечера, длинные столы, огни и воздух.</p>
+    </article>
+  </div>
+  <div class="cta-stack">
+    <a class="btn" href="Banquets.html">рассчитать банкет</a>
+    <a class="btn btn--outline" href="Banquets.html">узнать про свадьбу у воды</a>
+  </div>
+</section>
+
+
+<!-- ===== ЖИЗНЬ КОЛИБРИ + ГАЛЕРЕЯ ===== -->
+<section id="gallery">
+  <div class="wrap section life-intro">
+    <div class="center-head">
+      <span class="script">Жизнь</span>
+      <span class="line">«Колибри»</span>
+    </div>
+    <p class="life-lead">
+      Вечера с живой музыкой, тематические ужины, сезонные предложения от шефа и события
+      для жителей посёлка и гостей. Подпишитесь на наши новости, чтобы не пропускать
+      интересные поводы выбраться к нам.
+    </p>
+  </div>
+
+  <div class="gallery-band">
+    <div class="wrap gallery-grid">
+      <div class="sub-head">
+        <span class="script">Фото</span>
+        <span class="line">галерея</span>
+      </div>
+      <div class="gallery">
+        <img src="assets/g3.jpg" alt="Жизнь Колибри — 1" loading="lazy">
+        <img src="assets/g2.jpg" alt="Жизнь Колибри — 2" loading="lazy">
+        <img src="assets/g4.jpg" alt="Жизнь Колибри — 3" loading="lazy">
+        <img src="assets/g6.jpg" alt="Жизнь Колибри — 4" loading="lazy">
+        <img src="assets/g5.jpg" alt="Жизнь Колибри — 5" loading="lazy">
+        <img src="assets/g7.jpg" alt="Жизнь Колибри — 6" loading="lazy">
+        <img src="assets/g1.jpg" alt="Жизнь Колибри — 7" loading="lazy">
+      </div>
+      <div class="gallery-cta">
+        <a class="btn btn--outline" href="#">подписаться на новости</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== БРОНЬ + ДОСТАВКА ===== -->
+<section class="book section wrap">
+  <div class="book__cols">
+    <div class="book__col">
+      <div class="bk-head"><span class="script">Забронировать</span><span class="bk-sub">стол онлайн</span></div>
+      <p>Выберите дату, время и количество гостей — мы подтвердим бронь и подготовим стол к вашему приезду.</p>
+    </div>
+    <div class="book__divider"></div>
+    <div class="book__col">
+      <div class="bk-head"><span class="script">Доставка</span><span class="bk-sub">домой</span></div>
+      <p>Любимые блюда с огня — у вас дома. Оформите заказ онлайн, и наша служба доставки привезёт всё тёплым и аккуратно упакованным.</p>
+    </div>
+  </div>
+  <form class="book__wrap" id="bookForm" novalidate>
+    <div class="book__form">
+      <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
+      <input type="email" name="email" placeholder="E-mail" autocomplete="email">
+      <input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" required>
+    </div>
+    <p class="book__consent">продолжая, вы соглашаетесь с <a href="#">Политикой использования файлов cookie</a> и <a href="#">Политикой конфиденциальности</a></p>
+    <div class="book__submit"><button class="btn" type="submit">заказать</button></div>
+  </form>
+</section>
+
+<!-- ===== ЧТО ГОВОРЯТ ГОСТИ ===== -->
+<section class="section wrap">
+  <div class="center-head">
+    <span class="script">Что говорят</span>
+    <span class="line">гости</span>
+  </div>
+  <div class="reviews">
+    <article class="review">
+      <div class="stars" aria-hidden="true">★★★★☆</div>
+      <p>В целом, неплохое место, уютное. Расчёт был на жителей выше расположенного vip-жилья, а потому кухня скорее похожа на семейный ужин хорошего качества. Винная карта вполне для приятного вечера. Персонал создаёт приятную атмосферу.</p>
+      <div class="who">Мария Г.</div>
+    </article>
+    <article class="review">
+      <div class="stars" aria-hidden="true">★★★★★</div>
+      <p>Очень приятное и уютное кафе. Всё сделано в спокойных тонах, и это приятно. Меню не очень большое, но блюда сытные и вкусные! Хочется отметить фирменный бургер «Колибри» — большой и очень вкусный. Обязательно вернусь сюда! Советую!</p>
+      <div class="who">София Б.</div>
+    </article>
+    <article class="review">
+      <div class="stars" aria-hidden="true">★★★★★</div>
+      <p>Уже два года ходим сюда, каждый раз — в самое сердце! Филе миньон: даже сложно прокомментировать, превосходно! Ребята, спасибо вам за такое качество продуктов и уважение к еде, потому что вы реально умеете её готовить!</p>
+      <div class="who">Дмитрий П.</div>
+    </article>
+  </div>
+</section>
+
+<!-- ===== КАК ДОБРАТЬСЯ ===== -->
+<section class="section wrap contacts" id="contacts">
+  <h2 class="script" style="font-size:clamp(38px,4.8vw,56px)">Как добраться</h2>
+  <a class="phone" href="tel:+79332728888">+7 933 272-88-88</a>
+  <p class="address">Московская область, г.о. Люберцы, село Верхнее Мячково, КП Белый берег, Подгорная улица, 9К</p>
+</section>
+<div class="feature">
+  <div class="feature__inner feature__inner--map">
+    <iframe
+      title="Карта проезда к ресторану Колибри"
+      loading="lazy"
+      src="https://yandex.ru/map-widget/v1/?text=Московская%20область%20Люберцы%20Верхнее%20Мячково%20Подгорная%209&z=14"></iframe>
+    <div class="badge">
+      <div class="name">колибри</div>
+      <div class="tag">ресторан</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__scallop" aria-hidden="true">
+    <svg viewBox="0 0 1200 40" preserveAspectRatio="none" fill="currentColor">
+      <path d="M0 40V10C100 10 100 0 200 0s100 10 200 10 100-10 200-10 100 10 200 10 100-10 200-10 100 10 200 10v30z"/>
+    </svg>
+  </div>
+  <div class="footer__inner">
+    <div class="legal">
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Юридическая информация</a>
+    </div>
+    <nav class="fnav" aria-label="Нижнее меню">
+      <a href="Menu.html">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+        <a href="About.html">о ресторане</a>
+      <a href="Contacts.html">контакты</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lb" id="lb" aria-hidden="true">
+  <button class="lb__close" id="lbClose" aria-label="Закрыть">&times;</button>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- ===== DRAWER ===== -->
+<div class="overlay" id="overlay"></div>
+<nav class="drawer" id="drawer" aria-label="Меню">
+  <button class="drawer__close" id="drawerClose" aria-label="Закрыть">&times;</button>
+  <a href="Menu.html">меню</a>
+  <a href="Banquets.html">банкеты и свадьбы</a>
+  <a href="Delivery.html">доставка</a>
+        <a href="About.html">о ресторане</a>
+  <a href="Contacts.html">контакты</a>
+</nav>
+
+<script>
+  const burger=document.getElementById('burger');
+  const drawer=document.getElementById('drawer');
+  const overlay=document.getElementById('overlay');
+  const dClose=document.getElementById('drawerClose');
+  function setNav(open){drawer.dataset.open=open;overlay.dataset.open=open;burger.setAttribute('aria-expanded',open);document.body.style.overflow=open?'hidden':''}
+  burger.addEventListener('click',()=>setNav(true));
+  overlay.addEventListener('click',()=>setNav(false));
+  dClose.addEventListener('click',()=>setNav(false));
+  drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setNav(false)));
+  // lightbox for gallery
+  const lb=document.getElementById('lb');
+  const lbImg=document.getElementById('lbImg');
+  const lbClose=document.getElementById('lbClose');
+  function openLb(src,alt){lbImg.src=src;lbImg.alt=alt||'';lb.dataset.open='true';document.body.style.overflow='hidden'}
+  function closeLb(){lb.dataset.open='false';lbImg.src='';document.body.style.overflow=''}
+  document.querySelectorAll('.gallery img').forEach(img=>{
+    img.addEventListener('click',()=>openLb(img.currentSrc||img.src,img.alt));
+  });
+  lb.addEventListener('click',closeLb);
+  lbClose.addEventListener('click',closeLb);
+
+  addEventListener('keydown',e=>{if(e.key==='Escape'){setNav(false);closeLb()}});
+
+  document.getElementById('bookForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const f=e.target;
+    if(!f.name.value.trim()||!f.phone.value.trim()){alert('Пожалуйста, укажите имя и телефон');return}
+    alert('Спасибо! Мы свяжемся с вами для подтверждения.');
+    f.reset();
+  });
+</script>
+</body>
+</html>
