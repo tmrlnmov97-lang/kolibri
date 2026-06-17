@@ -111,9 +111,10 @@
   @media (max-width:480px){.cta-stack .btn{min-width:0;width:100%}}
 
   /* book + delivery */
-  .book__cols{display:grid;grid-template-columns:1fr 1px 1fr;gap:clamp(30px,5vw,64px);align-items:start;max-width:1000px;margin:0 auto}
+  .book__cols{display:grid;grid-template-columns:1fr 1px 1fr;gap:clamp(30px,5vw,64px);align-items:stretch;max-width:1000px;margin:0 auto}
   .book__divider{background:rgba(53,42,41,.2);align-self:stretch;min-height:200px}
-  .book__col{text-align:center}
+  .book__col{text-align:center;display:flex;flex-direction:column;align-items:center}
+  .book__btn{margin-top:clamp(28px,4vw,44px);min-width:240px}
   .bk-head .script{display:block;font-family:var(--display);color:var(--red-accent);font-size:clamp(36px,4.4vw,56px);line-height:1}
   .bk-head .bk-sub{display:block;font-weight:300;font-size:clamp(22px,2.6vw,32px);color:var(--ink);margin-top:4px}
   .book__col p{font-weight:500;font-size:15px;line-height:1.6;color:var(--ink);max-width:360px;margin:clamp(16px,2.2vw,24px) auto 0}
@@ -401,22 +402,15 @@
     <div class="book__col">
       <div class="bk-head"><span class="script">Забронировать</span><span class="bk-sub">стол онлайн</span></div>
       <p>Выберите дату, время и количество гостей — мы подтвердим бронь и подготовим стол к вашему приезду.</p>
+      <a class="btn book__btn" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">забронировать</a>
     </div>
     <div class="book__divider"></div>
     <div class="book__col">
       <div class="bk-head"><span class="script">Доставка</span><span class="bk-sub">домой</span></div>
       <p>Любимые блюда с огня — у вас дома. Оформите заказ онлайн, и наша служба доставки привезёт всё тёплым и аккуратно упакованным.</p>
+      <a class="btn book__btn" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">заказать</a>
     </div>
   </div>
-  <form class="book__wrap" id="bookForm" novalidate>
-    <div class="book__form">
-      <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
-      <input type="email" name="email" placeholder="E-mail" autocomplete="email">
-      <input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" required>
-    </div>
-    <p class="book__consent">продолжая, вы соглашаетесь с <a href="#">Политикой использования файлов cookie</a> и <a href="#">Политикой конфиденциальности</a></p>
-    <div class="book__submit"><button class="btn" type="submit">заказать</button></div>
-  </form>
 </section>
 
 <!-- ===== ЧТО ГОВОРЯТ ГОСТИ ===== -->
@@ -524,13 +518,6 @@
 
   addEventListener('keydown',e=>{if(e.key==='Escape'){setNav(false);closeLb()}});
 
-  document.getElementById('bookForm').addEventListener('submit',e=>{
-    e.preventDefault();
-    const f=e.target;
-    if(!f.name.value.trim()||!f.phone.value.trim()){alert('Пожалуйста, укажите имя и телефон');return}
-    alert('Спасибо! Мы свяжемся с вами для подтверждения.');
-    f.reset();
-  });
 </script>
 </body>
 </html>
