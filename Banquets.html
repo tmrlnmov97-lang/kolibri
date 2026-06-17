@@ -61,6 +61,7 @@
   .hero__title{font-family:var(--display);font-weight:400;color:var(--red-accent);line-height:1;font-size:clamp(38px,5vw,58px)}
   .hero__title .sub{display:block;font-family:var(--body);font-weight:300;color:var(--ink);font-size:clamp(17px,2.1vw,22px);margin-top:8px;letter-spacing:.01em}
   .hero__lead{font-weight:500;font-size:16px;line-height:1.6;color:var(--ink);max-width:560px;margin:20px auto 0}
+  .hero__cta{margin-top:clamp(22px,3vw,32px)}
 
   /* banner of 3 photos */
   .banner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:clamp(26px,4vw,40px);border-radius:0;overflow:hidden}
@@ -100,6 +101,9 @@
   .btn{display:inline-flex;align-items:center;justify-content:center;font-weight:500;font-size:17px;color:var(--cream);background:var(--red-accent);padding:15px 34px;border-radius:63px;border:0;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 12px 26px -12px rgba(196,64,49,.7)}
   .btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px -12px rgba(196,64,49,.85)}
   .form .btn{align-self:center;margin-top:0}
+  .request__cta{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(14px,2vw,20px);align-self:center}
+  .request__cta h3{font-family:var(--display);color:var(--red-accent);font-weight:400;line-height:1;font-size:clamp(26px,3.2vw,38px)}
+  .request__cta p{font-weight:500;font-size:15px;line-height:1.6;color:var(--ink);max-width:320px;margin:0}
 
   /* ============ FOOTER ============ */
   .footer{flex-shrink:0;position:relative;background:var(--band);color:var(--ink)}
@@ -136,6 +140,7 @@
     .request__inner{grid-template-columns:1fr}
     .request__photo{aspect-ratio:16/10}
     .request .form{order:-1}
+    .request .request__cta{order:-1}
   }
   @media (max-width:560px){
     .sheets{grid-template-columns:1fr}
@@ -173,6 +178,7 @@
       корпоративы и камерные свадьбы у воды. Мы помогаем сделать праздник одновременно
       красивым и тёплым: с продуманным меню, уютной атмосферой и удобной логистикой для гостей.
     </p>
+    <a class="btn hero__cta" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">запросить расчёт банкета</a>
   </section>
 
   <!-- banner (full width) -->
@@ -221,13 +227,11 @@
     <div class="request__inner">
       <div class="request__photo"><img src="assets/avt1.jpg" alt="Блюдо ресторана Колибри"></div>
 
-      <form class="form" id="banquetForm" novalidate>
-        <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
-        <input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" required>
-        <input type="email" name="email" placeholder="E-mail" autocomplete="email">
-        <p class="consent">продолжая, вы соглашаетесь с <a href="#">Политикой использования файлов cookie</a> и <a href="#">Политикой конфиденциальности</a></p>
-        <button class="btn" type="submit">запросить расчёт банкета</button>
-      </form>
+      <div class="request__cta">
+        <h3>Организуем праздник под ключ</h3>
+        <p>Расскажем о залах и меню, подберём формат под ваше событие.</p>
+        <a class="btn" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">запросить расчёт банкета</a>
+      </div>
 
       <div class="request__photo"><img src="assets/avt2.jpg" alt="Авторский коктейль"></div>
     </div>
@@ -295,13 +299,6 @@
   lb.addEventListener('click',closeLb);
   lbClose.addEventListener('click',closeLb);
 
-  document.getElementById('banquetForm').addEventListener('submit',e=>{
-    e.preventDefault();
-    const f=e.target;
-    if(!f.name.value.trim()||!f.phone.value.trim()){alert('Пожалуйста, укажите имя и телефон');return}
-    alert('Спасибо! Мы свяжемся с вами для расчёта банкета.');
-    f.reset();
-  });
 
   addEventListener('keydown',e=>{if(e.key==='Escape'){setNav(false);closeLb()}});
 </script>
