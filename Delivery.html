@@ -131,7 +131,7 @@
   }
 </style>
 </head>
-<body>
+<body data-cms-page="delivery">
 
 <!-- ===== HEADER ===== -->
 <header class="header">
@@ -156,8 +156,8 @@
 <main>
   <!-- ===== HERO ===== -->
   <section class="hero">
-    <h1 class="hero__title">Доставка<span class="sub">из «Колибри»</span></h1>
-    <p class="hero__lead">
+    <h1 class="hero__title"><span data-cms="hero_title">Доставка</span><span class="sub" data-cms="hero_sub">из «Колибри»</span></h1>
+    <p class="hero__lead" data-cms="hero_lead">
       Не всегда хочется ехать — иногда хочется устроить «Колибри» дома. Для таких дней
       у нас есть собственная служба доставки: любимые блюда с огня, салаты и закуски
       приезжают тёплыми и аккуратно упакованными.
@@ -167,41 +167,41 @@
   <!-- ===== ХИТЫ МЕНЮ ===== -->
   <section class="section wrap">
     <div class="center-head">
-      <span class="script">Хиты меню</span>
+      <span class="script" data-cms="hits_script">Хиты меню</span>
       <span class="sub">то, что заказывают чаще всего</span>
     </div>
     <div class="hits">
-      <figure class="hit"><img src="assets/g3.jpg" alt="Стейк Рибай" loading="lazy"><span>Стейк Рибай</span></figure>
-      <figure class="hit"><img src="assets/krevetki.jpg" alt="Креветки в сливочном соусе" loading="lazy"><span>Креветки в сливочном соусе</span></figure>
-      <figure class="hit"><img src="assets/xinkalitomat.jpg" alt="Хинкали в томатном соусе" loading="lazy"><span>Хинкали в томатном соусе</span></figure>
-      <figure class="hit"><img src="assets/semqa.jpg" alt="Семга" loading="lazy"><span>Семга</span></figure>
-      <figure class="hit"><img src="assets/baranyakoreyka.jpg" alt="Баранья корейка" loading="lazy"><span>Баранья корейка</span></figure>
-      <figure class="hit"><img src="assets/napaleon.jpg" alt="Наполеон" loading="lazy"><span>Наполеон</span></figure>
-      <figure class="hit"><img src="assets/pomilanski.jpg" alt="По-милански" loading="lazy"><span>По-милански</span></figure>
+      <figure class="hit"><img src="assets/g3.jpg" alt="Стейк Рибай" loading="lazy" data-cms="hit1_img"><span data-cms="hit1_name">Стейк Рибай</span></figure>
+      <figure class="hit"><img src="assets/krevetki.jpg" alt="Креветки в сливочном соусе" loading="lazy" data-cms="hit2_img"><span data-cms="hit2_name">Креветки в сливочном соусе</span></figure>
+      <figure class="hit"><img src="assets/xinkalitomat.jpg" alt="Хинкали в томатном соусе" loading="lazy" data-cms="hit3_img"><span data-cms="hit3_name">Хинкали в томатном соусе</span></figure>
+      <figure class="hit"><img src="assets/semqa.jpg" alt="Семга" loading="lazy" data-cms="hit4_img"><span data-cms="hit4_name">Семга</span></figure>
+      <figure class="hit"><img src="assets/baranyakoreyka.jpg" alt="Баранья корейка" loading="lazy" data-cms="hit5_img"><span data-cms="hit5_name">Баранья корейка</span></figure>
+      <figure class="hit"><img src="assets/napaleon.jpg" alt="Наполеон" loading="lazy" data-cms="hit6_img"><span data-cms="hit6_name">Наполеон</span></figure>
+      <figure class="hit"><img src="assets/pomilanski.jpg" alt="По-милански" loading="lazy" data-cms="hit7_img"><span data-cms="hit7_name">По-милански</span></figure>
     </div>
   </section>
 
   <!-- ===== УСЛОВИЯ ДОСТАВКИ ===== -->
   <section class="section wrap">
     <div class="center-head">
-      <span class="script">Условия</span>
-      <span class="sub">доставки</span>
+      <span class="script" data-cms="terms_script">Условия</span>
+      <span class="sub" data-cms="terms_sub">доставки</span>
     </div>
     <div class="terms">
       <article class="term">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <h3>Зона доставки</h3>
-        <p>Люберцы, Верхнее Мячково и посёлки в радиусе 15 км от ресторана.</p>
+        <h3 data-cms="term1_title">Зона доставки</h3>
+        <p data-cms="term1_text">Люберцы, Верхнее Мячково и посёлки в радиусе 15 км от ресторана.</p>
       </article>
       <article class="term">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-        <h3>Время</h3>
-        <p>Готовим и привозим за 60–90 минут. Ежедневно с 12:00 до 22:00.</p>
+        <h3 data-cms="term2_title">Время</h3>
+        <p data-cms="term2_text">Готовим и привозим за 60–90 минут. Ежедневно с 12:00 до 22:00.</p>
       </article>
       <article class="term">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 7l2-3h14l2 3M9 11h6"/></svg></div>
-        <h3>Заказ</h3>
-        <p>Минимальный заказ — от 1500 ₽. Доставим бесплатно при заказе от 3000 ₽.</p>
+        <h3 data-cms="term3_title">Заказ</h3>
+        <p data-cms="term3_text">Минимальный заказ — от 1500 ₽. Доставим бесплатно при заказе от 3000 ₽.</p>
       </article>
     </div>
   </section>
@@ -209,15 +209,15 @@
   <!-- ===== МЕНЮ + ЗАКАЗ ===== -->
   <section class="section wrap">
     <div class="sheets">
-      <a class="sheet" href="assets/menu-food.jpg" data-lb>
-        <img src="assets/menu-food.jpg" alt="Меню — кухня" loading="lazy">
+      <a class="sheet" href="assets/menu-food.jpg" data-lb data-cms-href="menu_food_img">
+        <img src="assets/menu-food.jpg" alt="Меню — кухня" loading="lazy" data-cms="menu_food_img">
       </a>
-      <a class="sheet" href="assets/menu-drinks.jpg" data-lb>
-        <img src="assets/menu-drinks.jpg" alt="Меню — напитки" loading="lazy">
+      <a class="sheet" href="assets/menu-drinks.jpg" data-lb data-cms-href="menu_drinks_img">
+        <img src="assets/menu-drinks.jpg" alt="Меню — напитки" loading="lazy" data-cms="menu_drinks_img">
       </a>
     </div>
     <div class="order-cta">
-      <a class="btn" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">сделать заказ</a>
+      <a class="btn" href="https://t.me/kolibri_rest_DM" target="_blank" rel="noopener" data-cms-href="order_link">сделать заказ</a>
     </div>
   </section>
 </main>
@@ -285,5 +285,6 @@
 
   addEventListener('keydown',e=>{if(e.key==='Escape'){setNav(false);closeLb()}});
 </script>
+<script type="module" src="cms-loader.js"></script>
 </body>
 </html>

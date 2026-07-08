@@ -118,7 +118,7 @@
   }
 </style>
 </head>
-<body>
+<body data-cms-page="contacts">
 
 <!-- ===== HEADER ===== -->
 <header class="header">
@@ -144,12 +144,12 @@
   <!-- ===== КАК ДОБРАТЬСЯ ===== -->
   <section class="contacts wrap" id="contacts">
     <div class="center-head">
-      <span class="script">Как до нас</span>
-      <span class="sub">добраться</span>
+      <span class="script" data-cms="head_script">Как до нас</span>
+      <span class="sub" data-cms="head_sub">добраться</span>
     </div>
     <div class="contact-card">
-      <a class="phone" href="tel:+79332728888">+7 933 272-88-88</a>
-      <p class="address">Московская область, г.о. Люберцы, село Верхнее Мячково, КП Белый берег, Подгорная улица, 9К</p>
+      <a class="phone" href="tel:+79332728888" data-cms="phone" data-cms-tel>+7 933 272-88-88</a>
+      <p class="address" data-cms="address">Московская область, г.о. Люберцы, село Верхнее Мячково, КП Белый берег, Подгорная улица, 9К</p>
     </div>
 
     <div class="map-wrap">
@@ -167,11 +167,11 @@
   <!-- ===== МЕССЕНДЖЕРЫ ===== -->
   <section class="messenger wrap">
     <div class="center-head">
-      <span class="script">Задать вопрос</span>
-      <span class="sub">в мессенджере</span>
+      <span class="script" data-cms="messenger_script">Задать вопрос</span>
+      <span class="sub" data-cms="messenger_sub">в мессенджере</span>
     </div>
     <div class="msg-row">
-      <a class="msg-btn msg-btn--tg" href="https://t.me/kolibri_rest" target="_blank" rel="noopener">
+      <a class="msg-btn msg-btn--tg" href="https://t.me/kolibri_rest_DM" target="_blank" rel="noopener" data-cms-href="telegram_link">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.6 19c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13 1.8 11.5c-1-.3-1-1 .2-1.5l18.6-7.2c.8-.3 1.5.2 1.3 1.5z"/></svg>
         Telegram
       </a>
@@ -226,5 +226,6 @@
   drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setNav(false)));
   addEventListener('keydown',e=>{if(e.key==='Escape')setNav(false)});
 </script>
+<script type="module" src="cms-loader.js"></script>
 </body>
 </html>

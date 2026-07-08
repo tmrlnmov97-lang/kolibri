@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<title>Колибри — Панель управления</title>
+<style>
+  @font-face{font-family:'Ouvality';src:url('assets/fonts/Ouvality.ttf') format('truetype');font-weight:400;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Medium.otf') format('opentype');font-weight:400 500;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Bold.otf') format('opentype');font-weight:600 700;font-display:swap}
+  :root{
+    --red:#c6492e; --red-accent:#c44031; --ink:#352a29; --cream:#fffcf0;
+    --band:#efe8d2; --bg:#f4efe4; --line:#e2d9c4; --ok:#2e7d51; --danger:#b23b2a;
+    --display:'Ouvality',cursive; --body:'Geometria',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer}
+  input,textarea,select{font-family:inherit;font-size:15px;color:var(--ink)}
+
+  .btn{border:0;border-radius:10px;padding:11px 18px;font-weight:600;font-size:15px;transition:transform .12s,box-shadow .12s,opacity .12s}
+  .btn:active{transform:translateY(1px)}
+  .btn--primary{background:var(--red-accent);color:var(--cream);box-shadow:0 8px 20px -10px rgba(196,64,49,.8)}
+  .btn--ghost{background:rgba(53,42,41,.06);color:var(--ink)}
+  .btn--danger{background:transparent;color:var(--danger);border:1px solid rgba(178,59,42,.35)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hidden{display:none!important}
+
+  /* Вход */
+  .login{min-height:100vh;display:grid;place-items:center;padding:24px}
+  .login__card{width:min(100%,400px);background:#fff;border:1px solid var(--line);border-radius:20px;padding:36px 32px;box-shadow:0 24px 60px -34px rgba(53,42,41,.5)}
+  .login__logo{text-align:center;margin-bottom:8px}.login__logo img{height:52px;margin:0 auto}
+  .login__title{text-align:center;font-family:var(--display);color:var(--red-accent);font-size:34px}
+  .login__sub{text-align:center;color:#8a7d76;font-size:14px;margin-bottom:26px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#6c5f58}
+  .field input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fbf8f0;outline:none;transition:border-color .15s}
+  .field input:focus{border-color:var(--red-accent)}
+  .login .btn{width:100%;margin-top:6px}
+  .msg{font-size:14px;margin-top:14px;text-align:center;min-height:20px}
+  .msg--err{color:var(--danger)}
+
+  /* Шапка */
+  .topbar{position:sticky;top:0;z-index:20;background:var(--red);color:var(--cream);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,40px)}
+  .topbar__brand{display:flex;align-items:center;gap:12px}
+  .topbar__brand img{height:32px}.topbar__brand b{font-family:var(--display);font-size:24px;font-weight:400}
+  .topbar__brand span{font-size:13px;opacity:.85}
+  .topbar__user{display:flex;align-items:center;gap:12px;font-size:14px}
+  .topbar .btn{padding:8px 14px;color:var(--cream);background:rgba(255,255,255,.15)}
+
+  /* Вкладки страниц */
+  .tabs{position:sticky;top:56px;z-index:15;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:0 clamp(16px,4vw,40px);overflow-x:auto}
+  .tab{border:0;background:none;padding:14px 16px;font-weight:600;font-size:15px;color:#8a7d76;border-bottom:3px solid transparent;white-space:nowrap}
+  .tab.active{color:var(--red-accent);border-bottom-color:var(--red-accent)}
+
+  .wrap{max-width:860px;margin:0 auto;padding:clamp(18px,3vw,32px) clamp(16px,4vw,40px) 90px}
+  .hint{background:#fff7e6;border:1px solid #f0e2bd;color:#7a5b12;border-radius:12px;padding:12px 16px;font-size:14px;margin-bottom:22px}
+
+  .section{margin-bottom:26px}
+  .section__name{font-family:var(--display);color:var(--red-accent);font-size:24px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+
+  .fld{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  .fld__label{font-size:13px;font-weight:600;color:#8a7d76;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .fld__saved{color:var(--ok);opacity:0;transition:opacity .2s;font-size:13px}
+  .fld__saved.show{opacity:1}
+  .fld input.t,.fld textarea.t{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fbf8f0;outline:none;transition:border-color .15s}
+  .fld input.t:focus,.fld textarea.t:focus{border-color:var(--red-accent)}
+  .fld textarea.t{resize:vertical;min-height:80px;line-height:1.5}
+
+  /* Поле фото */
+  .imgfld{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .imgfld__preview{width:150px;height:110px;border-radius:10px;overflow:hidden;background:#f0eadb;border:1px dashed var(--line);display:grid;place-items:center;flex:0 0 auto}
+  .imgfld__preview img{width:100%;height:100%;object-fit:cover}
+  .imgfld__preview .ph{color:#b3a795;font-size:13px}
+  .imgfld__side{flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px}
+  .imgfld input[type=file]{display:none}
+
+  /* Блюда меню */
+  .dish{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;display:grid;grid-template-columns:110px 1fr;gap:14px}
+  .dish__photo{position:relative;width:110px;height:110px;border-radius:10px;overflow:hidden;background:#f0eadb;border:1px dashed var(--line);display:grid;place-items:center;text-align:center;cursor:pointer}
+  .dish__photo img{width:100%;height:100%;object-fit:cover}
+  .dish__photo .ph{color:#a99f92;font-size:12px;padding:6px}
+  .dish__photo input{display:none}
+  .dish__body{display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .ctrl{flex:1;min-width:110px}.ctrl label{display:block;font-size:12px;font-weight:600;color:#8a7d76;margin-bottom:3px}
+  .ctrl input,.ctrl textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fbf8f0;outline:none}
+  .ctrl input:focus,.ctrl textarea:focus{border-color:var(--red-accent)}
+  .ctrl textarea{resize:vertical;min-height:38px}.ctrl--price{max-width:120px;flex:0 0 auto}.ctrl--cat{max-width:180px;flex:0 0 auto}
+  .dish__foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .switch{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#6c5f58;cursor:pointer}
+  .switch input{width:18px;height:18px;accent-color:var(--red-accent)}
+  .dish__actions{display:flex;gap:8px;align-items:center}
+  .saved{font-size:13px;color:var(--ok);opacity:0;transition:opacity .2s}.saved.show{opacity:1}
+
+  .state{text-align:center;color:#8a7d76;padding:40px 0}
+
+  @media (max-width:560px){.dish{grid-template-columns:1fr}.dish__photo{width:100%;height:150px}}
+</style>
+</head>
+<body>
+
+<!-- Вход -->
+<div class="login" id="loginView">
+  <form class="login__card" id="loginForm">
+    <div class="login__logo"><img src="assets/logo.png" alt="Колибри"></div>
+    <div class="login__title">Панель управления</div>
+    <div class="login__sub">Вход для сотрудников</div>
+    <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="password">Пароль</label><input id="password" type="password" autocomplete="current-password" required></div>
+    <button class="btn btn--primary" type="submit" id="loginBtn">Войти</button>
+    <div class="msg msg--err" id="loginMsg"></div>
+  </form>
+</div>
+
+<!-- Приложение -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="topbar__brand"><img src="assets/logo.png" alt=""><b>Колибри</b><span>панель управления</span></div>
+    <div class="topbar__user"><span id="whoami"></span><button class="btn" id="logoutBtn">Выйти</button></div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="home">🏠 Главная</button>
+    <button class="tab" data-tab="menu">🍽 Меню</button>
+    <button class="tab" data-tab="banquets">🎉 Банкеты</button>
+    <button class="tab" data-tab="delivery">🚗 Доставка</button>
+    <button class="tab" data-tab="about">🌿 О ресторане</button>
+    <button class="tab" data-tab="contacts">📞 Контакты</button>
+  </div>
+  <div class="wrap">
+    <div class="hint">✏️ Меняйте текст прямо в полях — сохраняется автоматически, как только вы кликнете в другое место. Фото — кнопкой «Загрузить». Изменения появляются на сайте сразу.</div>
+    <div id="panel"><div class="state">Загружаю…</div></div>
+  </div>
+</div>
+
+<datalist id="catList"></datalist>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_KEY } from './supabase-config.js';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = (id) => document.getElementById(id);
+const esc = (s) => (s ?? '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+let activeTab = 'home';
+let content = [];   // строки site_content
+let dishes = [];    // строки menu_items
+
+// ---------- Сессия ----------
+init();
+async function init(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) showApp(session); else showLogin();
+}
+function showLogin(){ $('loginView').classList.remove('hidden'); $('appView').classList.add('hidden'); }
+function showApp(session){
+  $('loginView').classList.add('hidden'); $('appView').classList.remove('hidden');
+  $('whoami').textContent = session.user.email;
+  loadAll();
+}
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('loginBtn'), msg = $('loginMsg');
+  msg.textContent=''; btn.disabled=true; btn.textContent='Входим…';
+  const { data, error } = await sb.auth.signInWithPassword({ email:$('email').value.trim(), password:$('password').value });
+  btn.disabled=false; btn.textContent='Войти';
+  if (error){ msg.textContent='Не удалось войти: проверьте email и пароль.'; return; }
+  showApp(data.session);
+});
+$('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
+
+// ---------- Вкладки ----------
+$('tabs').addEventListener('click', (e) => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  activeTab = t.dataset.tab;
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
+  renderPanel();
+});
+
+// ---------- Загрузка данных ----------
+async function loadAll(){
+  const [c, d] = await Promise.all([
+    sb.from('site_content').select('*').order('sort_order'),
+    sb.from('menu_items').select('*').order('category').order('sort_order'),
+  ]);
+  if (c.error){ $('panel').innerHTML = `<div class="state">Ошибка: ${esc(c.error.message)}<br><br>Похоже, база ещё не настроена — запустите SQL из файла supabase-setup.sql.</div>`; return; }
+  content = c.data || [];
+  dishes  = d.data || [];
+  renderPanel();
+}
+
+// ---------- Отрисовка активной вкладки ----------
+function renderPanel(){
+  const panel = $('panel');
+  const rows = content.filter(r => r.page === activeTab);
+
+  let html = '';
+  // группы по секциям
+  const groups = {};
+  for (const r of rows){ (groups[r.section || ''] ||= []).push(r); }
+  for (const [section, items] of Object.entries(groups)){
+    html += `<div class="section"><div class="section__name">${esc(section || 'Содержимое')}</div>${items.map(fieldHTML).join('')}</div>`;
+  }
+
+  // на вкладке «Меню» — ещё редактор блюд
+  if (activeTab === 'menu'){
+    html += `<div class="section"><div class="section__name">Блюда меню (список)</div>
+      <div style="margin-bottom:14px"><button class="btn btn--primary" id="addDish">+ Добавить блюдо</button></div>
+      <div id="dishList"></div></div>`;
+  }
+
+  panel.innerHTML = html || `<div class="state">Пусто.</div>`;
+
+  // навесить обработчики полей контента
+  rows.forEach(r => bindField(panel.querySelector(`[data-fid="${r.id}"]`), r));
+
+  if (activeTab === 'menu'){
+    renderDishes();
+    $('addDish').addEventListener('click', addDish);
+  }
+}
+
+function fieldHTML(r){
+  if (r.type === 'image'){
+    const prev = r.value
+      ? `<img src="${esc(r.value)}" alt="">`
+      : `<span class="ph">нет фото</span>`;
+    return `<div class="fld" data-fid="${r.id}">
+      <div class="fld__label"><span>${esc(r.label)}</span><span class="fld__saved">Сохранено ✓</span></div>
+      <label class="imgfld">
+        <span class="imgfld__preview">${prev}</span>
+        <span class="imgfld__side">
+          <span class="btn btn--ghost" style="text-align:center">📷 Загрузить фото</span>
+          <span style="font-size:12px;color:#a99f92">JPG или PNG</span>
+        </span>
+        <input type="file" accept="image/*" class="f-img">
+      </label>
+    </div>`;
+  }
+  let input;
+  if (r.type === 'textarea'){
+    input = `<textarea class="t f-text" rows="3">${esc(r.value)}</textarea>`;
+  } else if (r.type === 'link'){
+    input = `<input class="t f-text" type="url" inputmode="url" placeholder="https://..." value="${esc(r.value)}">
+             <div style="font-size:12px;color:#a99f92;margin-top:6px">🔗 Ссылка, куда ведёт кнопка</div>`;
+  } else {
+    input = `<input class="t f-text" type="text" value="${esc(r.value)}">`;
+  }
+  return `<div class="fld" data-fid="${r.id}">
+    <div class="fld__label"><span>${esc(r.label)}</span><span class="fld__saved">Сохранено ✓</span></div>
+    ${input}
+  </div>`;
+}
+
+function bindField(el, r){
+  if (!el) return;
+  const saved = el.querySelector('.fld__saved');
+
+  const textInput = el.querySelector('.f-text');
+  if (textInput){
+    textInput.addEventListener('change', async () => {
+      const val = textInput.value;
+      const { error } = await sb.from('site_content').update({ value: val }).eq('id', r.id);
+      if (error){ alert('Ошибка сохранения: ' + error.message); return; }
+      r.value = val; flash(saved);
+    });
+  }
+
+  const imgInput = el.querySelector('.f-img');
+  if (imgInput){
+    imgInput.addEventListener('change', async () => {
+      const file = imgInput.files[0]; if (!file) return;
+      const prev = el.querySelector('.imgfld__preview');
+      prev.innerHTML = `<span class="ph">Загрузка…</span>`;
+      try{
+        const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = `${r.page}/${r.block_key}-${Date.now()}.${ext}`;
+        const { error: upErr } = await sb.storage.from('photos').upload(path, file, { upsert:true });
+        if (upErr) throw upErr;
+        const { data:{ publicUrl } } = sb.storage.from('photos').getPublicUrl(path);
+        const { error: dbErr } = await sb.from('site_content').update({ value: publicUrl }).eq('id', r.id);
+        if (dbErr) throw dbErr;
+        r.value = publicUrl;
+        prev.innerHTML = `<img src="${esc(publicUrl)}" alt="">`;
+        flash(saved);
+      }catch(err){
+        alert('Не удалось загрузить фото: ' + (err.message || err));
+        prev.innerHTML = r.value ? `<img src="${esc(r.value)}" alt="">` : `<span class="ph">нет фото</span>`;
+      }
+    });
+  }
+}
+
+// ---------- Блюда меню ----------
+function renderDishes(){
+  const box = $('dishList');
+  const cats = [...new Set(dishes.map(d => d.category).filter(Boolean))];
+  $('catList').innerHTML = cats.map(c => `<option value="${esc(c)}">`).join('');
+  if (!dishes.length){ box.innerHTML = `<div class="state">Пока нет блюд. Нажмите «+ Добавить блюдо».</div>`; return; }
+  box.innerHTML = dishes.map(dishCard).join('');
+  box.querySelectorAll('.dish').forEach(bindDish);
+}
+function dishCard(d){
+  const photo = d.photo_url ? `<img src="${esc(d.photo_url)}" alt="">` : `<span class="ph">📷 фото</span>`;
+  return `<div class="dish" data-id="${esc(d.id)}">
+    <label class="dish__photo">${photo}<input type="file" accept="image/*" class="f-photo"></label>
+    <div class="dish__body">
+      <div class="row">
+        <div class="ctrl"><label>Название</label><input class="f-name" value="${esc(d.name)}"></div>
+        <div class="ctrl ctrl--price"><label>Цена, ₽</label><input class="f-price" type="number" value="${d.price ?? ''}"></div>
+      </div>
+      <div class="row">
+        <div class="ctrl ctrl--cat"><label>Раздел</label><input class="f-cat" list="catList" value="${esc(d.category)}"></div>
+        <div class="ctrl"><label>Описание</label><textarea class="f-desc">${esc(d.description)}</textarea></div>
+      </div>
+      <div class="dish__foot">
+        <label class="switch"><input type="checkbox" class="f-avail" ${d.is_available?'checked':''}> Показывать на сайте</label>
+        <div class="dish__actions"><span class="saved">Сохранено ✓</span>
+          <button class="btn btn--danger f-del">Удалить</button>
+          <button class="btn btn--primary f-save">Сохранить</button></div>
+      </div>
+    </div></div>`;
+}
+function bindDish(card){
+  const id = card.dataset.id;
+  const saved = card.querySelector('.saved');
+  card.querySelector('.f-photo').addEventListener('change', async function(){
+    const file = this.files[0]; if (!file) return;
+    const p = card.querySelector('.dish__photo'); p.querySelector('.ph,img')?.remove();
+    try{
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `menu/${id}-${Date.now()}.${ext}`;
+      const { error: upErr } = await sb.storage.from('photos').upload(path, file, { upsert:true });
+      if (upErr) throw upErr;
+      const { data:{ publicUrl } } = sb.storage.from('photos').getPublicUrl(path);
+      const { error: dbErr } = await sb.from('menu_items').update({ photo_url: publicUrl }).eq('id', id);
+      if (dbErr) throw dbErr;
+      dishes.find(x => x.id === id).photo_url = publicUrl; renderDishes();
+    }catch(err){ alert('Не удалось загрузить фото: ' + (err.message || err)); renderDishes(); }
+  });
+  card.querySelector('.f-save').addEventListener('click', async (e) => {
+    const btn = e.currentTarget; btn.disabled=true; btn.textContent='Сохраняю…';
+    const patch = {
+      name: card.querySelector('.f-name').value.trim(),
+      price: card.querySelector('.f-price').value==='' ? null : parseInt(card.querySelector('.f-price').value,10),
+      category: card.querySelector('.f-cat').value.trim() || 'Без раздела',
+      description: card.querySelector('.f-desc').value.trim() || null,
+      is_available: card.querySelector('.f-avail').checked,
+    };
+    const rec = dishes.find(x => x.id === id);
+    const catChanged = rec.category !== patch.category;
+    const { error } = await sb.from('menu_items').update(patch).eq('id', id);
+    btn.disabled=false; btn.textContent='Сохранить';
+    if (error){ alert('Ошибка сохранения: ' + error.message); return; }
+    Object.assign(rec, patch);
+    if (catChanged) renderDishes(); else flash(saved);
+  });
+  card.querySelector('.f-del').addEventListener('click', async () => {
+    if (!confirm('Удалить это блюдо?')) return;
+    const { error } = await sb.from('menu_items').delete().eq('id', id);
+    if (error){ alert('Ошибка удаления: ' + error.message); return; }
+    dishes = dishes.filter(x => x.id !== id); renderDishes();
+  });
+}
+async function addDish(){
+  const maxOrder = dishes.reduce((m,d) => Math.max(m, d.sort_order||0), 0);
+  const { data, error } = await sb.from('menu_items')
+    .insert({ name:'Новое блюдо', category:'Без раздела', is_available:true, sort_order:maxOrder+1 })
+    .select().single();
+  if (error){ alert('Ошибка: ' + error.message); return; }
+  dishes.push(data); renderDishes();
+  const el = document.querySelector(`.dish[data-id="${data.id}"] .f-name`);
+  if (el){ el.focus(); el.select(); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+}
+
+function flash(tag){ if(!tag) return; tag.classList.add('show'); setTimeout(() => tag.classList.remove('show'), 1600); }
+</script>
+</body>
+</html>

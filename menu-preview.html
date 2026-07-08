@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<title>Меню (превью) — Колибри</title>
+<style>
+  @font-face{font-family:'Ouvality';src:url('assets/fonts/Ouvality.ttf') format('truetype');font-weight:400;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Medium.otf') format('opentype');font-weight:400 500;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-Bold.otf') format('opentype');font-weight:600 700;font-display:swap}
+  @font-face{font-family:'Geometria';src:url('assets/fonts/Geometria-ExtraBold.otf') format('opentype');font-weight:800;font-display:swap}
+  :root{
+    --red:#c6492e; --red-accent:#c44031; --ink:#352a29; --cream:#fffcf0;
+    --band:#efe8d2; --bg:#ffffff; --display:'Ouvality',cursive; --body:'Geometria',system-ui,sans-serif;
+    --maxw:1200px; --pad:36px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+
+  .header{background:var(--red);color:var(--cream);position:sticky;top:0;z-index:50}
+  .header__inner{max-width:var(--maxw);margin:0 auto;padding:16px var(--pad);display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logo img{height:40px;width:auto;display:block}
+  .nav{display:flex;gap:34px;align-items:center}
+  .nav a{font-size:15px;font-weight:500;color:var(--cream)}
+
+  .demo-note{background:#fff5d6;color:#7a5b12;text-align:center;font-size:14px;padding:10px 16px;border-bottom:1px solid #ecd9a0}
+
+  .menu{flex:1 0 auto;max-width:var(--maxw);width:100%;margin:0 auto;padding:clamp(28px,4vw,48px) var(--pad)}
+  .menu__title{text-align:center;margin-bottom:clamp(22px,3vw,34px)}
+  .menu__title .script{font-family:var(--display);color:var(--red-accent);font-size:clamp(40px,6vw,64px);line-height:1}
+  .menu__title .sub{display:block;font-weight:500;color:var(--ink);font-size:clamp(16px,2vw,20px);margin-top:6px}
+
+  .cat{margin-bottom:clamp(28px,4vw,44px)}
+  .cat__name{font-family:var(--display);color:var(--red-accent);font-size:clamp(30px,4vw,42px);text-align:center;margin-bottom:20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(16px,2.5vw,24px)}
+  .card{background:#fff;border:1px solid #efe8d8;border-radius:20px;overflow:hidden;box-shadow:0 16px 40px -30px rgba(53,42,41,.5);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 24px 54px -30px rgba(53,42,41,.55)}
+  .card__img{aspect-ratio:4/3;background:#f0eadb;overflow:hidden}
+  .card__img img{width:100%;height:100%;object-fit:cover}
+  .card__img--empty{display:grid;place-items:center;color:#c3b8a6;font-size:40px}
+  .card__body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .card__top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .card__name{font-weight:700;font-size:17px}
+  .card__price{font-weight:800;color:var(--red-accent);white-space:nowrap;font-size:17px}
+  .card__desc{color:#8a7d76;font-size:14px}
+
+  .state{text-align:center;color:#8a7d76;padding:60px 0}
+
+  .footer{flex-shrink:0;background:var(--band);color:var(--ink);margin-top:clamp(36px,5vw,60px)}
+  .footer__inner{max-width:var(--maxw);margin:0 auto;padding:28px var(--pad);text-align:center;font-size:14px;color:#8a7d76}
+
+  @media (max-width:760px){.nav{display:none}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header__inner">
+    <a class="logo" href="Home.html" aria-label="Колибри"><img src="assets/logo.png" alt="Колибри"></a>
+    <nav class="nav">
+      <a href="Home.html">главная</a>
+      <a href="menu-preview.html" aria-current="page">меню</a>
+      <a href="Banquets.html">банкеты и свадьбы</a>
+      <a href="Delivery.html">доставка</a>
+      <a href="About.html">о ресторане</a>
+      <a href="Contacts.html">контакты</a>
+    </nav>
+  </div>
+</header>
+
+<div class="demo-note">👀 Это превью: меню собирается из базы. Отредактируйте блюда в <b>admin.html</b> — и обновите эту страницу.</div>
+
+<main class="menu">
+  <div class="menu__title">
+    <span class="script">Меню</span>
+    <span class="sub">наши блюда</span>
+  </div>
+  <div id="menu"><div class="state">Загружаю меню…</div></div>
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">© Колибри — превью динамического меню</div>
+</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { SUPABASE_URL, SUPABASE_KEY } from './supabase-config.js';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const esc = (s) => (s ?? '').toString()
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+load();
+async function load(){
+  const box = document.getElementById('menu');
+  // is_available = true → только то, что помечено «показывать на сайте»
+  const { data, error } = await sb.from('menu_items')
+    .select('*').eq('is_available', true).order('category').order('sort_order');
+
+  if (error){ box.innerHTML = `<div class="state">Не удалось загрузить меню: ${esc(error.message)}</div>`; return; }
+  if (!data || !data.length){ box.innerHTML = `<div class="state">Меню пока пустое. Добавьте блюда в админке.</div>`; return; }
+
+  const groups = {};
+  for (const d of data){ (groups[d.category || 'Меню'] ||= []).push(d); }
+
+  box.innerHTML = Object.entries(groups).map(([cat, items]) => `
+    <section class="cat">
+      <h2 class="cat__name">${esc(cat)}</h2>
+      <div class="grid">
+        ${items.map(card).join('')}
+      </div>
+    </section>`).join('');
+}
+
+function card(d){
+  const img = d.photo_url
+    ? `<div class="card__img"><img src="${esc(d.photo_url)}" alt="${esc(d.name)}" loading="lazy"></div>`
+    : `<div class="card__img card__img--empty">🍽</div>`;
+  const price = (d.price != null && d.price !== '') ? `<span class="card__price">${esc(d.price)} ₽</span>` : '';
+  const desc = d.description ? `<div class="card__desc">${esc(d.description)}</div>` : '';
+  return `
+  <article class="card">
+    ${img}
+    <div class="card__body">
+      <div class="card__top"><span class="card__name">${esc(d.name)}</span>${price}</div>
+      ${desc}
+    </div>
+  </article>`;
+}
+</script>
+</body>
+</html>

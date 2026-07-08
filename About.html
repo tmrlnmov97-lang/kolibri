@@ -106,7 +106,7 @@
   }
 </style>
 </head>
-<body>
+<body data-cms-page="about">
 
 <!-- ===== HEADER ===== -->
 <header class="header">
@@ -132,10 +132,10 @@
   <!-- ===== ИСТОРИЯ И ИДЕЯ ===== -->
   <section class="section wrap">
     <div class="center-head">
-      <span class="script">История</span>
-      <span class="sub">и идея места</span>
+      <span class="script" data-cms="history_script">История</span>
+      <span class="sub" data-cms="history_sub">и идея места</span>
     </div>
-    <p class="prose">
+    <p class="prose" data-cms="history_text">
       «Колибри» родился из простого желания — сделать место, куда хочется ехать не ради
       галочки в списке, а ради атмосферы. Здесь важно всё: вид из окна, свет, звук,
       запах огня, улыбки команды. Мы любим, когда гости задерживаются дольше, чем
@@ -147,38 +147,38 @@
   <section>
     <div class="wrap">
       <div class="center-head">
-        <span class="script">Природа</span>
-        <span class="sub">и локация</span>
+        <span class="script" data-cms="nature_script">Природа</span>
+        <span class="sub" data-cms="nature_sub">и локация</span>
       </div>
     </div>
     <div class="banner">
-      <img src="assets/priroda1.PNG" alt="Ресторан у воды — 1">
-      <img src="assets/priroda2.PNG" alt="Ресторан у воды — 2">
-      <img src="assets/priroda3.PNG" alt="Ресторан у воды — 3">
+      <img src="assets/priroda1.PNG" alt="Ресторан у воды — 1" data-cms="nature_img1">
+      <img src="assets/priroda2.PNG" alt="Ресторан у воды — 2" data-cms="nature_img2">
+      <img src="assets/priroda3.PNG" alt="Ресторан у воды — 3" data-cms="nature_img3">
     </div>
   </section>
 
   <!-- ===== НАША КОМАНДА ===== -->
   <section class="section wrap">
     <div class="center-head">
-      <span class="script">Наша</span>
-      <span class="sub">команда</span>
+      <span class="script" data-cms="team_script">Наша</span>
+      <span class="sub" data-cms="team_sub">команда</span>
     </div>
     <div class="team">
-      <div class="member"><figure><img src="assets/chef-zhanna.jpg" alt="Шеф-повар Жанна"></figure><div class="name">Жанна</div><div class="role">Шеф-повар</div></div>
-      <div class="member"><figure><img src="assets/baha.jpg" alt="Су-шеф Баха"></figure><div class="name">Баха</div><div class="role">Су-шеф</div></div>
-      <div class="member"><figure><img src="assets/emir.jpg" alt="Бармен Эмир"></figure><div class="name">Эмир</div><div class="role">Бармен</div></div>
-      <div class="member"><figure><img src="assets/beka.jpg" alt="Официант Бека"></figure><div class="name">Бека</div><div class="role">Официант</div></div>
+      <div class="member"><figure><img src="assets/chef-zhanna.jpg" alt="Шеф-повар Жанна" data-cms="member1_img"></figure><div class="name" data-cms="member1_name">Жанна</div><div class="role" data-cms="member1_role">Шеф-повар</div></div>
+      <div class="member"><figure><img src="assets/baha.jpg" alt="Су-шеф Баха" data-cms="member2_img"></figure><div class="name" data-cms="member2_name">Баха</div><div class="role" data-cms="member2_role">Су-шеф</div></div>
+      <div class="member"><figure><img src="assets/emir.jpg" alt="Бармен Эмир" data-cms="member3_img"></figure><div class="name" data-cms="member3_name">Эмир</div><div class="role" data-cms="member3_role">Бармен</div></div>
+      <div class="member"><figure><img src="assets/beka.jpg" alt="Официант Бека" data-cms="member4_img"></figure><div class="name" data-cms="member4_name">Бека</div><div class="role" data-cms="member4_role">Официант</div></div>
     </div>
   </section>
 
   <!-- ===== НАШИ ЦЕННОСТИ ===== -->
   <section class="section wrap">
     <div class="center-head">
-      <span class="script">Наши</span>
-      <span class="sub">ценности</span>
+      <span class="script" data-cms="values_script">Наши</span>
+      <span class="sub" data-cms="values_sub">ценности</span>
     </div>
-    <p class="prose">
+    <p class="prose" data-cms="values_text">
       Честные продукты и уважение к еде, гостеприимство без формальностей и внимание
       к деталям. Мы готовим на открытом огне, привозим свежую рыбу и работаем так,
       чтобы каждый вечер в «Колибри» хотелось повторить — будь то семейный ужин,
@@ -234,5 +234,6 @@
   drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setNav(false)));
   addEventListener('keydown',e=>{if(e.key==='Escape')setNav(false)});
 </script>
+<script type="module" src="cms-loader.js"></script>
 </body>
 </html>

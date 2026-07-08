@@ -110,7 +110,7 @@
   }
 </style>
 </head>
-<body>
+<body data-cms-page="menu">
 
 <!-- ===== HEADER ===== -->
 <header class="header">
@@ -139,14 +139,14 @@
   </div>
 
   <div class="sheets">
-    <a class="sheet" href="assets/menu-food.jpg" data-lb aria-label="Открыть меню кухни">
-      <img src="assets/menu-food.jpg" alt="Меню — кухня: закуски, салаты, супы, горячие блюда, пицца, десерты" loading="lazy">
+    <a class="sheet" href="assets/menu-food.jpg" data-lb data-cms-href="menu_food_img" aria-label="Открыть меню кухни">
+      <img src="assets/menu-food.jpg" alt="Меню — кухня: закуски, салаты, супы, горячие блюда, пицца, десерты" loading="lazy" data-cms="menu_food_img">
       <span class="sheet__zoom" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-4-4"/></svg>
       </span>
     </a>
-    <a class="sheet" href="assets/menu-drinks.jpg" data-lb aria-label="Открыть карту напитков">
-      <img src="assets/menu-drinks.jpg" alt="Алкоголь: вина, коктейли, виски, ром, текила и другое" loading="lazy">
+    <a class="sheet" href="assets/menu-drinks.jpg" data-lb data-cms-href="menu_drinks_img" aria-label="Открыть карту напитков">
+      <img src="assets/menu-drinks.jpg" alt="Алкоголь: вина, коктейли, виски, ром, текила и другое" loading="lazy" data-cms="menu_drinks_img">
       <span class="sheet__zoom" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-4-4"/></svg>
       </span>
@@ -223,5 +223,6 @@
 
   addEventListener('keydown',e=>{if(e.key==='Escape'){setNav(false);closeLb()}});
 </script>
+<script type="module" src="cms-loader.js"></script>
 </body>
 </html>
