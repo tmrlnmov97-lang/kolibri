@@ -175,13 +175,34 @@ function showApp(session){
   $('whoami').textContent = session.user.email;
   loadAll();
 }
+// --- Ограничение попыток входа (анти-перебор пароля) ---
+const LOCK_KEY = 'kolibri_login_lock', MAX_FAILS = 5, LOCK_MS = 60000;
+const getLock = () => { try { return JSON.parse(localStorage.getItem(LOCK_KEY)) || {fails:0, until:0}; } catch { return {fails:0, until:0}; } };
+const setLock = (v) => { try { localStorage.setItem(LOCK_KEY, JSON.stringify(v)); } catch {} };
+
 $('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = $('loginBtn'), msg = $('loginMsg');
+  const lock = getLock();
+  const wait = Math.ceil((lock.until - Date.now()) / 1000);
+  if (wait > 0){ msg.textContent = `Слишком много попыток. Подождите ${wait} сек.`; return; }
+
   msg.textContent=''; btn.disabled=true; btn.textContent='Входим…';
   const { data, error } = await sb.auth.signInWithPassword({ email:$('email').value.trim(), password:$('password').value });
   btn.disabled=false; btn.textContent='Войти';
-  if (error){ msg.textContent='Не удалось войти: проверьте email и пароль.'; return; }
+
+  if (error){
+    const fails = lock.fails + 1;
+    if (fails >= MAX_FAILS){
+      setLock({ fails:0, until: Date.now() + LOCK_MS });
+      msg.textContent = `Слишком много неудачных попыток. Вход заблокирован на ${LOCK_MS/1000} сек.`;
+    } else {
+      setLock({ fails, until:0 });
+      msg.textContent = `Неверный email или пароль. Осталось попыток: ${MAX_FAILS - fails}.`;
+    }
+    return;
+  }
+  setLock({ fails:0, until:0 });
   showApp(data.session);
 });
 $('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });

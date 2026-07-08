@@ -23,6 +23,13 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
     const map = {};
     for (const row of data) map[row.block_key] = row.value;
 
+    // разрешаем только безопасные ссылки (блокируем javascript:, data: и прочее)
+    const safeUrl = (u) => {
+      if (u == null) return null;
+      const s = String(u).trim();
+      return /^(https?:\/\/|tel:|mailto:|\/|assets\/|#)/i.test(s) ? s : null;
+    };
+
     document.querySelectorAll('[data-cms]').forEach((el) => {
       const val = map[el.dataset.cms];
       if (val == null || val === '') return;    // нет значения — не трогаем
@@ -37,9 +44,9 @@ const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
       }
     });
 
-    // ссылка на увеличенное фото (лайтбокс): <a data-cms-href="menu_food_img">
+    // ссылки: лайтбокс-картинки и CTA-кнопки: <a data-cms-href="key">
     document.querySelectorAll('[data-cms-href]').forEach((el) => {
-      const val = map[el.dataset.cmsHref];
+      const val = safeUrl(map[el.dataset.cmsHref]);
       if (val) el.setAttribute('href', val);
     });
   } catch (e) {
