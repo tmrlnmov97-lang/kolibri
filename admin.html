@@ -98,6 +98,14 @@
 
   .state{text-align:center;color:#8a7d76;padding:40px 0}
 
+  /* Панель сохранения */
+  .savebar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);box-shadow:0 -10px 30px -20px rgba(53,42,41,.6);display:flex;align-items:center;gap:16px;padding:12px clamp(16px,4vw,40px)}
+  .savebar__status{font-size:14px;color:#8a7d76;margin-right:auto}
+  .savebar__status.ok{color:var(--ok);font-weight:600}
+  .savebar__status.dirty{color:var(--danger);font-weight:600}
+  .savebar .btn{font-size:16px;padding:12px 26px}
+  .fld.dirty{border-color:var(--red-accent);box-shadow:0 0 0 2px rgba(196,64,49,.14)}
+
   @media (max-width:560px){.dish{grid-template-columns:1fr}.dish__photo{width:100%;height:150px}}
 </style>
 </head>
@@ -131,8 +139,13 @@
     <button class="tab" data-tab="contacts">📞 Контакты</button>
   </div>
   <div class="wrap">
-    <div class="hint">✏️ Меняйте текст прямо в полях — сохраняется автоматически, как только вы кликнете в другое место. Фото — кнопкой «Загрузить». Изменения появляются на сайте сразу.</div>
+    <div class="hint">✏️ Меняйте тексты в полях и нажимайте «Сохранить изменения» внизу. Фото применяются сразу при загрузке. Всё сразу появляется на сайте.</div>
     <div id="panel"><div class="state">Загружаю…</div></div>
+  </div>
+
+  <div class="savebar hidden" id="savebar">
+    <span class="savebar__status" id="saveStatus"></span>
+    <button class="btn btn--primary" id="saveBtn">💾 Сохранить изменения</button>
   </div>
 </div>
 
@@ -148,6 +161,7 @@ const esc = (s) => (s ?? '').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;
 let activeTab = 'home';
 let content = [];   // строки site_content
 let dishes = [];    // строки menu_items
+let dirty = {};     // id -> новое значение (несохранённые тексты)
 
 // ---------- Сессия ----------
 init();
@@ -173,8 +187,13 @@ $('loginForm').addEventListener('submit', async (e) => {
 $('logoutBtn').addEventListener('click', async () => { await sb.auth.signOut(); showLogin(); });
 
 // ---------- Вкладки ----------
-$('tabs').addEventListener('click', (e) => {
+$('tabs').addEventListener('click', async (e) => {
   const t = e.target.closest('.tab'); if (!t) return;
+  if (t.dataset.tab === activeTab) return;
+  if (Object.keys(dirty).length){
+    if (confirm('Есть несохранённые изменения. Сохранить их перед переходом?')) await saveAll();
+    else dirty = {};
+  }
   activeTab = t.dataset.tab;
   document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
   renderPanel();
@@ -194,6 +213,7 @@ async function loadAll(){
 
 // ---------- Отрисовка активной вкладки ----------
 function renderPanel(){
+  $('savebar').classList.add('hidden');   // новая страница — прячем панель сохранения
   const panel = $('panel');
   const rows = content.filter(r => r.page === activeTab);
 
@@ -261,11 +281,10 @@ function bindField(el, r){
 
   const textInput = el.querySelector('.f-text');
   if (textInput){
-    textInput.addEventListener('change', async () => {
-      const val = textInput.value;
-      const { error } = await sb.from('site_content').update({ value: val }).eq('id', r.id);
-      if (error){ alert('Ошибка сохранения: ' + error.message); return; }
-      r.value = val; flash(saved);
+    textInput.addEventListener('input', () => {
+      if (textInput.value === (r.value ?? '')){ delete dirty[r.id]; el.classList.remove('dirty'); }
+      else { dirty[r.id] = textInput.value; el.classList.add('dirty'); }
+      updateSavebar();
     });
   }
 
@@ -377,6 +396,47 @@ async function addDish(){
 }
 
 function flash(tag){ if(!tag) return; tag.classList.add('show'); setTimeout(() => tag.classList.remove('show'), 1600); }
+
+// ---------- Кнопка «Сохранить изменения» ----------
+function updateSavebar(){
+  const n = Object.keys(dirty).length;
+  const bar = $('savebar'), status = $('saveStatus'), btn = $('saveBtn');
+  if (n){
+    bar.classList.remove('hidden');
+    status.textContent = `Несохранённых изменений: ${n}`;
+    status.className = 'savebar__status dirty';
+    btn.disabled = false;
+  } else {
+    status.textContent = 'Все изменения сохранены ✓';
+    status.className = 'savebar__status ok';
+    btn.disabled = true;
+  }
+}
+
+async function saveAll(){
+  const ids = Object.keys(dirty);
+  if (!ids.length) return;
+  const btn = $('saveBtn'); btn.disabled = true; btn.textContent = 'Сохраняю…';
+  let fail = 0;
+  for (const id of ids){
+    const { error } = await sb.from('site_content').update({ value: dirty[id] }).eq('id', id);
+    if (error){ fail++; continue; }
+    const rec = content.find(x => x.id === id); if (rec) rec.value = dirty[id];
+    delete dirty[id];
+  }
+  btn.textContent = '💾 Сохранить изменения';
+  // снять подсветку с сохранённых полей
+  document.querySelectorAll('.fld.dirty').forEach(el => { if (!(el.dataset.fid in dirty)) el.classList.remove('dirty'); });
+  updateSavebar();
+  if (fail) alert(`Не удалось сохранить ${fail} полей. Проверьте интернет и попробуйте ещё раз.`);
+}
+
+$('saveBtn').addEventListener('click', saveAll);
+
+// предупреждение при попытке уйти с несохранёнными изменениями
+addEventListener('beforeunload', (e) => {
+  if (Object.keys(dirty).length){ e.preventDefault(); e.returnValue = ''; }
+});
 </script>
 </body>
 </html>
